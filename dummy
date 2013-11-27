@@ -1,0 +1,46 @@
+       RELOPTINFO (1): rows=60175 width=21
+        	path list:
+        	IdxScan(1) rows=60175 cost=0.29..0.72
+        	  pathkeys: ((l.l_orderkey, o.o_orderkey)) 
+        	SeqScan(1) rows=60175 cost=0.00..1729.75 
+        	IdxScan(1) rows=60175 cost=0.29..4183.14
+        	  pathkeys: ((l.l_orderkey, o.o_orderkey))
+        
+        	cheapest startup path:
+        	SeqScan(1) rows=60175 cost=0.00..1729.75
+        
+        	cheapest total path:
+        	SeqScan(1) rows=60175 cost=0.00..1729.75
+        
+        DEBUG:  clause_selectivity: s1 0.000067
+        DEBUG:  clause_selectivity: s1 0.000067
+        RELOPTINFO (2): rows=15000 width=8 
+        	path list:
+        	IdxScan(2) rows=15000 cost=0.29..0.33
+        	  pathkeys: ((l.l_orderkey, o.o_orderkey)) 
+        	SeqScan(2) rows=15000 cost=0.00..411.00         
+        	IdxScan(2) rows=15000 cost=0.29..661.30         
+        	  pathkeys: ((l.l_orderkey, o.o_orderkey))
+        
+        	cheapest startup path:
+        	SeqScan(2) rows=15000 cost=0.00..411.00
+        
+        	cheapest total path:
+        	SeqScan(2) rows=15000 cost=0.00..411.00
+        
+        DEBUG:  clause_selectivity: s1 0.000667
+        DEBUG:  clause_selectivity: s1 0.000667
+        RELOPTINFO (3): rows=1 width=4 
+        	baserestrictinfo: unknown expr = Customer#000000001
+        	path list:
+        	IdxScan(3) rows=1 cost=0.28..0.31
+        	  pathkeys: ((o.o_custkey, c.c_custkey))
+        	SeqScan(3) rows=1 cost=0.00..54.75
+        	IdxScan(3) rows=1 cost=0.28..89.56
+        	  pathkeys: ((o.o_custkey, c.c_custkey))
+        
+        	cheapest startup path:
+        	SeqScan(3) rows=1 cost=0.00..54.75
+        
+        	cheapest total path:
+        	SeqScan(3) rows=1 cost=0.00..54.75
