@@ -15,6 +15,12 @@ public class RelOptParser extends Parser<Object> {
 	private static final Logger logger = new Logger();
 	private List<String> _buffer;
 
+	public RelOptParser() {
+		logger.accept(
+		// LogMessageType.PARSER
+		);
+	}
+
 	@Override
 	public Object parse(final List<String> input) throws ParseException {
 		_buffer = input;
@@ -32,8 +38,12 @@ public class RelOptParser extends Parser<Object> {
 		rows(input);
 		width(input);
 		input = lbr(input);
-		final List<Path> paths = pathlist(input);
-		System.out.println(paths);
+		if (lookahead(input, "baserestrictinfo")) {
+			consume(input);
+			input = lbr(input);
+		}
+		System.out.println("------------------- new paths:");
+		System.out.println(pathlist(input));
 	}
 
 	private int rows(final StringBuilder input) throws ParseException {
@@ -79,7 +89,6 @@ public class RelOptParser extends Parser<Object> {
 			if (lookahead(new StringBuilder(_buffer.get(0)), "pathkeys")) {
 				input = lbr(input);
 				consume(input);
-
 			}
 			// input = lbr(input);
 			paths.add(new Path(id, strategy, rows, cost));

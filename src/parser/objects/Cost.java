@@ -8,4 +8,8 @@ public class Cost {
 		this.to = to;
 	}
 
+	@Override
+	public String toString() {
+		return String.format("Cost[%f..%f]", from, to);
+	}
 }

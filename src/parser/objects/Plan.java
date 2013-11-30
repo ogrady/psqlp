@@ -1,6 +1,5 @@
-package parser;
+package parser.objects;
 
-import parser.Access.AccessStrategy;
 
 public class Plan {
 

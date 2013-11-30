@@ -47,7 +47,7 @@ public class Logger {
 		_accepted = new EnumBitmask<LogMessageType>();
 		setSink(sink);
 		accept(LogMessageType.GENERAL, LogMessageType.INFO,
-				LogMessageType.PARSER, LogMessageType.ERROR);
+				LogMessageType.ERROR);
 	}
 
 	/**

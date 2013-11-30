@@ -13,4 +13,11 @@ public class Path {
 		this.rows = rows;
 		this.cost = cost;
 	}
+
+	@Override
+	public String toString() {
+		return String
+				.format("Path[\r\n id: %d \r\n astrat: %s \r\n rows: %d \r\n cost: %s\r\n]",
+						id, strategy, rows, cost);
+	}
 }
