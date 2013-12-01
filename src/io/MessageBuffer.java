@@ -29,7 +29,7 @@ public class MessageBuffer implements IInputReceiver {
 	 *            the parser the input is passed to once the buffer is full (in
 	 *            termes of "contains a complete message")
 	 */
-	private MessageBuffer(final Parser<?> messageParser) {
+	public MessageBuffer(final Parser<?> messageParser) {
 		_buffer = new ArrayList<String>();
 		_parser = messageParser;
 	}

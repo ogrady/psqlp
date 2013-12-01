@@ -28,6 +28,7 @@ public class Display extends JPanel {
 	private static final int WIDTH = 60;
 	private static final int HEIGHT = 30;
 	private final List<VisualNode> _visualNodes;
+	private Tree<?> _tree;
 
 	/**
 	 * Constructor
@@ -43,6 +44,14 @@ public class Display extends JPanel {
 	}
 
 	/**
+	 * Rebuilds the tree to fit to the parents size with the current tree
+	 * (costly)
+	 */
+	public void reTree() {
+		setTree(_tree);
+	}
+
+	/**
 	 * Set a new tree for the display which causes it to recreate the whole
 	 * representation of the tree. Kinda expensive function.
 	 * 
@@ -53,6 +62,7 @@ public class Display extends JPanel {
 		removeAll();
 		_visualNodes.clear();
 		createSubTree(tree._root, 0, getWidth());
+		_tree = tree;
 	}
 
 	/**

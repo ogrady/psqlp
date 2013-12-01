@@ -44,9 +44,21 @@ public class TreeNode<T> implements IRenderable<VisualNode> {
 	 * @return the depth of the node
 	 */
 	public int getDepth() {
-		final int left = _leftChild == null ? 0 : _leftChild.getDepth() + 1;
-		final int right = _rightChild == null ? 0 : _rightChild.getDepth() + 1;
-		return Math.max(left, right);
+		final int leftDepth = _leftChild == null ? 0 : _leftChild.getDepth() + 1;
+		final int rightDepth = _rightChild == null ? 0 : _rightChild.getDepth() + 1;
+		return Math.max(leftDepth, rightDepth);
+	}
+
+	/**
+	 * Treenodes have subtrees spanning underneath them which therefore have a
+	 * width
+	 * 
+	 * @return
+	 */
+	public int getWidth() {
+		final int leftWidth = _leftChild == null ? 0 : _leftChild.getWidth();
+		final int rightWidth = _rightChild == null ? 0 : _rightChild.getWidth();
+		return leftWidth + rightWidth + 1;
 	}
 
 	/**

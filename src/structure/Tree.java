@@ -31,12 +31,13 @@ public class Tree<T> {
 	}
 
 	/**
-	 * Gets the width of the tree which is twice the depth (as every level can
-	 * double the width of the tree)
+	 * Gets the width of the tree that which is twice the depth (as every level
+	 * can double the width of the tree)
 	 * 
 	 * @return the width of the tree
 	 */
 	public int getWidth() {
-		return getDepth() * 2;
+		// return getDepth() * 2;
+		return _root.getWidth();
 	}
 }

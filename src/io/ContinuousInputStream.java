@@ -7,17 +7,18 @@ import java.io.FileReader;
 import java.io.IOException;
 
 public class ContinuousInputStream {
-	private boolean reading;
-	private BufferedReader in;
+	private volatile boolean _reading;
+	private BufferedReader _in;
 
 	/**
 	 * Stops the reader from reading and closes the inputstream if it is opened
 	 */
 	public void stop() {
-		this.reading = false;
-		if (this.in != null) {
+		_reading = false;
+		if (_in != null) {
 			try {
-				this.in.close();
+				_in.close();
+				_in = null;
 			} catch (final IOException e) {
 				e.printStackTrace();
 			}
@@ -35,7 +36,9 @@ public class ContinuousInputStream {
 	 */
 	public void read(final File file, final IInputReceiver destination)
 			throws IOException {
-		reading = true;
+		// this will close iff this stream is already reading from another file
+		stop();
+		_reading = true;
 		if (!file.exists()) {
 			throw new IOException(String.format(
 					"can't read file '%s' (does not exist)",
@@ -47,10 +50,10 @@ public class ContinuousInputStream {
 					file.getAbsoluteFile()));
 		}
 		try {
-			this.in = new BufferedReader(new FileReader(file));
+			_in = new BufferedReader(new FileReader(file));
 			String line;
-			while (reading) {
-				line = in.readLine();
+			while (_reading) {
+				line = _in.readLine();
 				if (line != null) {
 					synchronized (line) {
 						destination.receive(line);
@@ -64,14 +67,13 @@ public class ContinuousInputStream {
 		} catch (final IOException e) {
 			e.printStackTrace();
 		} finally {
-			this.stop();
+			stop();
 		}
 	}
 
 	public static void main(final String[] args) throws IOException {
 		new ContinuousInputStream().read(new File("dummy"),
 				new IInputReceiver() {
-
 					@Override
 					public void receive(final String line) {
 						System.out.println(line);
