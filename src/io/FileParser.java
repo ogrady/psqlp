@@ -17,8 +17,6 @@ public class FileParser {
 
 	public void read(final File file) {
 		if (_thread != null) {
-			// TODO when the inputstream is locked in the readLine method this
-			// part will lock up the thread until another line is read
 			_stream.stop();
 		}
 		_thread = new Thread(new Runnable() {
@@ -31,6 +29,6 @@ public class FileParser {
 				}
 			}
 		});
-		_thread.run();
+		_thread.start();
 	}
 }
