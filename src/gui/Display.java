@@ -80,22 +80,32 @@ public class Display extends JPanel {
 	 */
 	private void createSubTree(final TreeNode<?> root, final int left,
 			final int right) {
-		final int middle = (right + left) / 2;
 		TreeNode<?> leftChild, rightChild;
 		leftChild = root.getLeftChild();
 		rightChild = root.getRightChild();
-		if (leftChild != null) {
-			createSubTree(leftChild, left, middle / 2);
 
-		}
+		int rightWidth = 0, leftWidth = 0;
 		if (leftChild != null) {
-			createSubTree(rightChild, middle / 2, right);
+			leftWidth = leftChild.getWidth();
+		} else {
+			leftWidth = 1;
+		}
+		if (rightChild != null) {
+			rightWidth = rightChild.getWidth();
+		}
+
+		final int middle = (right + left) / (rightWidth + leftWidth + 1)
+				* leftWidth;
+		if (leftChild != null) {
+			createSubTree(leftChild, left, middle);
+		}
+		if (rightChild != null) {
+			createSubTree(rightChild, middle, right);
 		}
 		final VisualNode node = new VisualNode(root);
 		_visualNodes.add(node);
 		node.setBounds(middle, (root.getHeight() + 1) * MARGIN, WIDTH, HEIGHT);
 		add(node);
-
 	}
 
 	/**
