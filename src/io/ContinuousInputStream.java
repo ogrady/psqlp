@@ -31,11 +31,15 @@ public class ContinuousInputStream {
 	 * 
 	 * @param file
 	 *            file to read from
+	 * @param destination
+	 *            where to read to
+	 * @param jumpToEnd
+	 *            start reading at the end of the file
 	 * @throws IOException
 	 *             when the file is not accessible or is a directory
 	 */
-	public void read(final File file, final IInputReceiver destination)
-			throws IOException {
+	public void read(final File file, final IInputReceiver destination,
+			final boolean jumpToEnd) throws IOException {
 		// this will close iff this stream is already reading from another file
 		stop();
 		_reading = true;
@@ -52,6 +56,11 @@ public class ContinuousInputStream {
 		try {
 			_in = new BufferedReader(new FileReader(file));
 			String line;
+			if (jumpToEnd) {
+				while (_in.readLine() != null) {
+					// intentionally left blank - jumps to the end of the file
+				}
+			}
 			while (_reading) {
 				line = _in.readLine();
 				if (line != null) {
@@ -78,7 +87,7 @@ public class ContinuousInputStream {
 					public void receive(final String line) {
 						System.out.println(line);
 					}
-				});
+				}, true);
 	}
 
 }

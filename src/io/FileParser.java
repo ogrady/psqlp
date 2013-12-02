@@ -23,7 +23,7 @@ public class FileParser {
 			@Override
 			public void run() {
 				try {
-					_stream.read(file, _receiver);
+					_stream.read(file, _receiver, true);
 				} catch (final IOException e) {
 					e.printStackTrace();
 				}
