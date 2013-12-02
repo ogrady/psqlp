@@ -52,7 +52,7 @@ public class MessageBuffer implements IInputReceiver {
 
 	public static void main(final String[] args) throws IOException {
 		new ContinuousInputStream().read(new File("dummy"), new MessageBuffer(
-				new RelOptParser()));
+				new RelOptParser()), true);
 	}
 
 }
