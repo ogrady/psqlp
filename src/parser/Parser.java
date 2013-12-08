@@ -43,9 +43,10 @@ public abstract class Parser<P> implements IParser<List<String>, P> {
 	 * @throws ParseException
 	 *             when the prefix does not meet the expectations
 	 */
+	@Deprecated
 	protected void checkNext(final String input, final String expected)
 			throws ParseException {
-		if (!input.startsWith(expected)) {
+		if (!lookahead(new StringBuilder(input), expected)) {
 			throw formException(String.format(
 					"invalid token '%s' - expected '%s'", input, expected));
 		}
@@ -59,11 +60,11 @@ public abstract class Parser<P> implements IParser<List<String>, P> {
 	 * @param input
 	 *            input string
 	 * @param expected
-	 *            the lookahead to check for
+	 *            the lookahead to check for (regular expression possible)
 	 * @return true, if the input starts off with the expected prefix
 	 */
 	protected boolean lookahead(final StringBuilder input, final String expected) {
-		return input.toString().startsWith(expected);
+		return input.toString().matches("^" + expected + ".*");
 	}
 
 	/**
@@ -158,7 +159,7 @@ public abstract class Parser<P> implements IParser<List<String>, P> {
 	 * @param sb
 	 *            stringbuilder to trim
 	 */
-	private void trimFront(final StringBuilder sb) {
+	protected void trimFront(final StringBuilder sb) {
 		int whitespaces = 0;
 		final Matcher matcher = WHITESPACE_PATTERN.matcher(sb.toString());
 		if (matcher.find()) {
@@ -167,8 +168,21 @@ public abstract class Parser<P> implements IParser<List<String>, P> {
 		sb.delete(0, whitespaces);
 	}
 
-	protected void consume(final StringBuilder sb) {
+	/**
+	 * Deletes the whole remainder of the stringbuilder and returns that
+	 * portion.<br>
+	 * Comes in handy when a line is not used at all (and we want to linebreak
+	 * without causing an exception because the input is not empty yet) or when
+	 * the whole remainder of the input is used as token.
+	 * 
+	 * @param sb
+	 *            input stringbuilder
+	 * @return remainder of the (now empty) stringbuilder
+	 */
+	protected String consume(final StringBuilder sb) {
+		final String remainder = sb.toString();
 		sb.delete(0, sb.length());
+		return remainder;
 	}
 
 	protected ParseException formException(final String mes) {

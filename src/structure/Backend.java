@@ -1,21 +1,19 @@
 package structure;
 
-import java.util.Random;
-
 public class Backend {
 	public Tree<?> getTree() {
-		new Random();
 		TreeNode<Integer> node = null;
 		TreeNode<Integer> left = null;
 		TreeNode<Integer> right = null;
-		for (int i = 0; i < 5; i++) {
-			node = new TreeNode<Integer>(i);
-			right = new TreeNode<Integer>(-i);
+		for (int i = 0; i < 60; i++) {
+			node = new TreeNode<Integer>(i + 1);
+			right = new TreeNode<Integer>(-i + 1);
 			if (left != null) {
+				node.setLeftChild(left);
 				left.setParent(node);
 			}
 			right.setParent(node);
-			node.setLeftChild(left);
+
 			node.setRightChild(right);
 			left = node;
 		}

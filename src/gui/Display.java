@@ -1,11 +1,16 @@
 package gui;
 
+import gui.renderer.Popup;
+
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import structure.Tree;
@@ -29,6 +34,7 @@ public class Display extends JPanel {
 	private static final int HEIGHT = 30;
 	private final List<VisualNode> _visualNodes;
 	private Tree<?> _tree;
+	private final JFrame _parent;
 
 	/**
 	 * Constructor
@@ -36,8 +42,9 @@ public class Display extends JPanel {
 	 * @param size
 	 *            initial size for the Display
 	 */
-	public Display(final Dimension size) {
+	public Display(final JFrame parent, final Dimension size) {
 		setSize(size);
+		_parent = parent;
 		_visualNodes = new ArrayList<VisualNode>();
 		setBackground(Color.WHITE);
 		setLayout(null);
@@ -103,6 +110,12 @@ public class Display extends JPanel {
 			createSubTree(rightChild, middle, right);
 		}
 		final VisualNode node = new VisualNode(root);
+		node.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(final MouseEvent me) {
+				new Popup(Display.this._parent).setVisible(true);
+			}
+		});
 		_visualNodes.add(node);
 		node.setBounds(middle, (root.getHeight() + 1) * MARGIN, WIDTH, HEIGHT);
 		add(node);

@@ -1,0 +1,132 @@
+        RELOPTINFO (1): rows=60175 width=21                
+        	path list:
+        	IdxScan(1) rows=60175 cost=0.29..0.72
+        	  pathkeys: ((l.l_orderkey, o.o_orderkey))        
+        	SeqScan(1) rows=60175 cost=0.00..1729.75          
+        	IdxScan(1) rows=60175 cost=0.29..4183.14
+        	  pathkeys: ((l.l_orderkey, o.o_orderkey))        
+        
+        	cheapest startup path:
+        	SeqScan(1) rows=60175 cost=0.00..1729.75
+        
+        	cheapest total path:
+        	SeqScan(1) rows=60175 cost=0.00..1729.75
+        
+        DEBUG:  clause_selectivity: s1 0.000067
+        DEBUG:  clause_selectivity: s1 0.000067
+        RELOPTINFO (2): rows=15000 width=8                 
+        	path list:
+        	IdxScan(2) rows=15000 cost=0.29..0.33
+        	  pathkeys: ((l.l_orderkey, o.o_orderkey)) 
+        	SeqScan(2) rows=15000 cost=0.00..411.00         
+        	IdxScan(2) rows=15000 cost=0.29..661.30         
+        	  pathkeys: ((l.l_orderkey, o.o_orderkey))
+        
+        	cheapest startup path:
+        	SeqScan(2) rows=15000 cost=0.00..411.00
+        
+        	cheapest total path:
+        	SeqScan(2) rows=15000 cost=0.00..411.00
+        
+        DEBUG:  clause_selectivity: s1 0.000667
+        DEBUG:  clause_selectivity: s1 0.000667
+        RELOPTINFO (3): rows=1 width=4                    
+        	baserestrictinfo: unknown expr = Customer#000000001
+        	path list:
+        	IdxScan(3) rows=1 cost=0.28..0.31
+        	  pathkeys: ((o.o_custkey, c.c_custkey))
+        	SeqScan(3) rows=1 cost=0.00..54.75
+        	IdxScan(3) rows=1 cost=0.28..89.56
+        	  pathkeys: ((o.o_custkey, c.c_custkey))
+        
+        	cheapest startup path:
+        	SeqScan(3) rows=1 cost=0.00..54.75
+        
+        	cheapest total path:
+        	SeqScan(3) rows=1 cost=0.00..54.75
+        
+
+
+
+
+        RELOPTINFO (1 2): rows=60175 width=21
+        	path list:
+        	HashJoin(1 2) rows=60175 cost=598.50..3606.97
+        	  clauses: l.l_orderkey = o.o_orderkey
+        		SeqScan(1) rows=60175 cost=0.00..1729.75  
+        		SeqScan(2) rows=15000 cost=0.00..411.00   
+        
+        	cheapest startup path:
+        	HashJoin(1 2) rows=60175 cost=598.50..3606.97
+        	  clauses: l.l_orderkey = o.o_orderkey
+        		SeqScan(1) rows=60175 cost=0.00..1729.75
+        		SeqScan(2) rows=15000 cost=0.00..411.00
+        
+        	cheapest total path:
+        	HashJoin(1 2) rows=60175 cost=598.50..3606.97
+        	  clauses: l.l_orderkey = o.o_orderkey
+        		SeqScan(1) rows=60175 cost=0.00..1729.75  
+        		SeqScan(2) rows=15000 cost=0.00..411.00   
+        
+        RELOPTINFO (2 3): rows=10 width=4
+        	path list:
+        	HashJoin(2 3) rows=10 cost=54.76..522.11
+        	  clauses: o.o_custkey = c.c_custkey
+        		SeqScan(2) rows=15000 cost=0.00..411.00   
+        		SeqScan(3) rows=1 cost=0.00..54.75        
+        	NestLoop(2 3) rows=10 cost=0.29..941.05
+        	  pathkeys: ((l.l_orderkey, o.o_orderkey))
+        	  clauses: o.o_custkey = c.c_custkey
+        		IdxScan(2) rows=15000 cost=0.29..661.30
+        		  pathkeys: ((l.l_orderkey, o.o_orderkey))
+        		Material(3) rows=1 cost=0.00..54.76
+        			SeqScan(3) rows=1 cost=0.00..54.75
+        
+        	cheapest startup path:
+        	NestLoop(2 3) rows=10 cost=0.29..941.05      
+        	  pathkeys: ((l.l_orderkey, o.o_orderkey))
+        	  clauses: o.o_custkey = c.c_custkey
+        		IdxScan(2) rows=15000 cost=0.29..661.30  
+        		  pathkeys: ((l.l_orderkey, o.o_orderkey))
+        		Material(3) rows=1 cost=0.00..54.76
+        			SeqScan(3) rows=1 cost=0.00..54.75
+        
+        	cheapest total path:
+        	HashJoin(2 3) rows=10 cost=54.76..522.11    
+        	  clauses: o.o_custkey = c.c_custkey
+        		SeqScan(2) rows=15000 cost=0.00..411.00  
+        		SeqScan(3) rows=1 cost=0.00..54.75       
+
+
+### Pass 3 (3-relation plans)
+
+        RELOPTINFO (1 2 3): rows=40 width=17
+        	path list:
+        	NestLoop(1 2 3) rows=40 cost=55.05..529.67
+        	  clauses: 
+        		HashJoin(2 3) rows=10 cost=54.76..522.11     
+        		  clauses: o.o_custkey = c.c_custkey
+        			SeqScan(2) rows=15000 cost=0.00..411.00
+        			SeqScan(3) rows=1 cost=0.00..54.75
+        		IdxScan(1) rows=60175 cost=0.29..0.72      
+        		  pathkeys: ((l.l_orderkey, o.o_orderkey)) 
+        
+        	cheapest startup path:
+        	NestLoop(1 2 3) rows=40 cost=55.05..529.67
+        	  clauses: 
+        		HashJoin(2 3) rows=10 cost=54.76..522.11
+        		  clauses: o.o_custkey = c.c_custkey
+        			SeqScan(2) rows=15000 cost=0.00..411.00
+        			SeqScan(3) rows=1 cost=0.00..54.75
+        		IdxScan(1) rows=60175 cost=0.29..0.72
+        		  pathkeys: ((l.l_orderkey, o.o_orderkey))
+        
+        	cheapest total path:
+        	NestLoop(1 2 3) rows=40 cost=55.05..529.67
+        	  clauses: 
+        		HashJoin(2 3) rows=10 cost=54.76..522.11
+        		  clauses: o.o_custkey = c.c_custkey
+        			SeqScan(2) rows=15000 cost=0.00..411.00
+        			SeqScan(3) rows=1 cost=0.00..54.75
+        		IdxScan(1) rows=60175 cost=0.29..0.72
+        		  pathkeys: ((l.l_orderkey, o.o_orderkey))

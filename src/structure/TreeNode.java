@@ -44,8 +44,10 @@ public class TreeNode<T> implements IRenderable<VisualNode> {
 	 * @return the depth of the node
 	 */
 	public int getDepth() {
-		final int leftDepth = _leftChild == null ? 0 : _leftChild.getDepth() + 1;
-		final int rightDepth = _rightChild == null ? 0 : _rightChild.getDepth() + 1;
+		final int leftDepth = _leftChild == null ? 0
+				: _leftChild.getDepth() + 1;
+		final int rightDepth = _rightChild == null ? 0
+				: _rightChild.getDepth() + 1;
 		return Math.max(leftDepth, rightDepth);
 	}
 
@@ -92,6 +94,7 @@ public class TreeNode<T> implements IRenderable<VisualNode> {
 	 */
 	public void setLeftChild(final TreeNode<T> leftChild) {
 		_leftChild = leftChild;
+		_leftChild.setParent(this);
 	}
 
 	/**
@@ -106,7 +109,8 @@ public class TreeNode<T> implements IRenderable<VisualNode> {
 	 *            the new right node
 	 */
 	public void setRightChild(final TreeNode<T> rightChild) {
-		this._rightChild = rightChild;
+		_rightChild = rightChild;
+		_rightChild.setParent(this);
 	}
 
 	/**

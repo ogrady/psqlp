@@ -11,6 +11,7 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.File;
 
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -46,7 +47,7 @@ public class Visualisation extends JFrame implements MouseListener {
 		setLayout(new BorderLayout());
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 
-		_display = new Display(size);
+		_display = new Display(this, size);
 		_display.setTree(new Backend().getTree());
 		_display.addMouseListener(this);
 		_scrollpane = new JScrollPane(_display);
@@ -61,6 +62,15 @@ public class Visualisation extends JFrame implements MouseListener {
 			}
 		});
 
+	}
+
+	/**
+	 * Opens another file for reading
+	 * 
+	 * @param file
+	 */
+	public void read(final File file) {
+		_parser.read(file);
 	}
 
 	/**
@@ -99,7 +109,8 @@ public class Visualisation extends JFrame implements MouseListener {
 				final JFileChooser chooser = new JFileChooser();
 				final int chosen = chooser.showOpenDialog(Visualisation.this);
 				if (chosen == JFileChooser.APPROVE_OPTION) {
-					_parser.read(chooser.getSelectedFile());
+					// _parser.read(chooser.getSelectedFile());
+					read(chooser.getSelectedFile());
 				}
 			}
 		});

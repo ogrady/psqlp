@@ -6,9 +6,9 @@ import io.logger.Logger;
 import java.util.ArrayList;
 import java.util.List;
 
-import parser.objects.AccessStrategy;
 import parser.objects.Cost;
-import parser.objects.Path;
+import parser.objects.Plan;
+import parser.objects.plan.AccessStrategy;
 import exception.ParseException;
 
 public class RelOptParser extends Parser<Object> {
@@ -33,7 +33,8 @@ public class RelOptParser extends Parser<Object> {
 		logger.print(String.format("parsing reloptinfo from '%s'", input),
 				LogMessageType.PARSER);
 		truncate(input, "RELOPTINFO (");
-		getInt(input);
+		System.out.println(ids(input));
+		// getInt(input);
 		truncate(input, "): ");
 		rows(input);
 		width(input);
@@ -71,29 +72,55 @@ public class RelOptParser extends Parser<Object> {
 		return new StringBuilder(_buffer.remove(0));
 	}
 
-	private List<Path> pathlist(StringBuilder input) throws ParseException {
+	private List<Plan> pathlist(StringBuilder input) throws ParseException {
 		logger.print(String.format("parsing pathlist from '%s'", input),
 				LogMessageType.PARSER);
-		final ArrayList<Path> paths = new ArrayList<Path>();
+		final ArrayList<Plan> paths = new ArrayList<Plan>();
 		truncate(input, "path list:");
 		while (!lookahead(new StringBuilder(_buffer.get(0)),
 				"cheapest startup path:")) {
 			input = lbr(input);
 			final AccessStrategy strategy = accessstrategy(input);
 			truncate(input, "(");
-			final int id = getInt(input);
+			// final int id = getInt(input);
+			final List<Integer> ids = ids(input);
 			truncate(input, ")");
 			final int rows = rows(input);
 			final Cost cost = cost(input);
 			// input = lbr(input);
+			String pathkeys = "";
+			String clauses = "";
 			if (lookahead(new StringBuilder(_buffer.get(0)), "pathkeys")) {
 				input = lbr(input);
-				consume(input);
+				pathkeys = pathkeys(input);
+			}
+			if (lookahead(new StringBuilder(_buffer.get(0)), "clauses:")) {
+				input = lbr(input);
+				clauses = clauses(input);
 			}
 			// input = lbr(input);
-			paths.add(new Path(id, strategy, rows, cost));
+			paths.add(new Plan(ids, strategy, rows, cost, pathkeys, clauses));
 		}
 		return paths;
+	}
+
+	private List<Integer> ids(final StringBuilder input) throws ParseException {
+		final ArrayList<Integer> ids = new ArrayList<Integer>();
+		while (lookahead(input, "\\d")) {
+			ids.add(getInt(input));
+			trimFront(input);
+		}
+		return ids;
+	}
+
+	private String pathkeys(final StringBuilder input) throws ParseException {
+		truncate(input, "pathkeys:");
+		return consume(input);
+	}
+
+	private String clauses(final StringBuilder input) throws ParseException {
+		truncate(input, "clauses:");
+		return consume(input);
 	}
 
 	private AccessStrategy accessstrategy(final StringBuilder input)
