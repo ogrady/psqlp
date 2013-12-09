@@ -32,6 +32,7 @@ public class MessageBuffer implements IInputReceiver {
 	public MessageBuffer(final Parser<?> messageParser) {
 		_buffer = new ArrayList<String>();
 		_parser = messageParser;
+		_indent = -1;
 	}
 
 	/**
@@ -44,17 +45,17 @@ public class MessageBuffer implements IInputReceiver {
 	@Override
 	public synchronized void receive(final String rawLine) {
 		final String trimmed = rawLine.trim();
-		if (relevant(rawLine)) {
-			// buffer is empty -> we just parsed a block -> start a new block by
-			// remembering this indent
+		// buffer is empty -> we just parsed a block -> start a new block by
+		// remembering this indent
+		if (!trimmed.equals("")) {
 			if (_buffer.isEmpty()) {
 				_indent = getIndent(rawLine);
 			}
 			// we have a running block and the indent of the new line is the
 			// same as
-			// the line that started the block ->
-			// the block has ended and a new block has started -> parse the old
-			// block and clear the buffer
+			// the line that started the block
+			// -> the block has ended and a new block has started
+			// -> parse the old block and clear the buffer
 			else if (getIndent(rawLine) == _indent) {
 				try {
 					_parser.parse(_buffer);
@@ -63,7 +64,9 @@ public class MessageBuffer implements IInputReceiver {
 				}
 				_buffer.clear();
 			}
-			_buffer.add(trimmed);
+			if (relevant(rawLine)) {
+				_buffer.add(trimmed);
+			}
 		}
 	}
 
@@ -98,5 +101,4 @@ public class MessageBuffer implements IInputReceiver {
 		// other sources we are not interested in
 		return !(trimmed.equals("") || trimmed.startsWith("DEBUG:"));
 	}
-
 }

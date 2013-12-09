@@ -9,6 +9,10 @@ package parser.objects.plan;
  * 
  */
 public enum AccessStrategy {
-	IdxScan, SeqScan, HashJoin, NestLoop, Material, BitmapHeapScan, BitmapAndPath, BitmapOrPath, TidScan, ForeignScan, Append, MergeAppend, Result, Unique, MergeJoin
-	// ???Path
+	IdxScan, SeqScan, HashJoin, NestLoop, Material, BitmapHeapScan, BitmapAndPath, BitmapOrPath, TidScan, ForeignScan, Append, MergeAppend, Result, Unique, MergeJoin, UNKNOWNPath {
+		@Override
+		public String toString() {
+			return "???Path";
+		}
+	};
 }

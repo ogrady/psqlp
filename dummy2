@@ -98,7 +98,6 @@
         		SeqScan(3) rows=1 cost=0.00..54.75       
 
 
-### Pass 3 (3-relation plans)
 
         RELOPTINFO (1 2 3): rows=40 width=17
         	path list:

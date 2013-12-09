@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import parser.objects.Cost;
-import parser.objects.Plan;
+import parser.objects.Path;
 import parser.objects.plan.AccessStrategy;
 import exception.ParseException;
 
@@ -51,14 +51,14 @@ public class RelOptParser extends Parser<Object> {
 		logger.print(String.format("parsing rows from '%s'", input),
 				LogMessageType.PARSER);
 		truncate(input, "rows=");
-		return getInt(input);
+		return parseInt(input);
 	}
 
 	private int width(final StringBuilder input) throws ParseException {
 		logger.print(String.format("parsing width from '%s'", input),
 				LogMessageType.PARSER);
 		truncate(input, "width=");
-		return getInt(input);
+		return parseInt(input);
 	}
 
 	private StringBuilder lbr(final StringBuilder currentRemainder)
@@ -72,10 +72,10 @@ public class RelOptParser extends Parser<Object> {
 		return new StringBuilder(_buffer.remove(0));
 	}
 
-	private List<Plan> pathlist(StringBuilder input) throws ParseException {
+	private List<Path> pathlist(StringBuilder input) throws ParseException {
 		logger.print(String.format("parsing pathlist from '%s'", input),
 				LogMessageType.PARSER);
-		final ArrayList<Plan> paths = new ArrayList<Plan>();
+		final ArrayList<Path> paths = new ArrayList<Path>();
 		truncate(input, "path list:");
 		while (!lookahead(new StringBuilder(_buffer.get(0)),
 				"cheapest startup path:")) {
@@ -99,7 +99,7 @@ public class RelOptParser extends Parser<Object> {
 				clauses = clauses(input);
 			}
 			// input = lbr(input);
-			paths.add(new Plan(ids, strategy, rows, cost, pathkeys, clauses));
+			paths.add(new Path(ids, strategy, rows, cost, pathkeys, clauses));
 		}
 		return paths;
 	}
@@ -107,7 +107,7 @@ public class RelOptParser extends Parser<Object> {
 	private List<Integer> ids(final StringBuilder input) throws ParseException {
 		final ArrayList<Integer> ids = new ArrayList<Integer>();
 		while (lookahead(input, "\\d")) {
-			ids.add(getInt(input));
+			ids.add(parseInt(input));
 			trimFront(input);
 		}
 		return ids;
@@ -130,8 +130,8 @@ public class RelOptParser extends Parser<Object> {
 		final String internalString = input.toString();
 		int i = 0;
 		while (i < AccessStrategy.values().length
-				&& !internalString
-						.startsWith(AccessStrategy.values()[i].name())) {
+				&& !internalString.startsWith(AccessStrategy.values()[i]
+						.toString())) {
 			i++;
 		}
 		if (i >= AccessStrategy.values().length) {
@@ -147,9 +147,9 @@ public class RelOptParser extends Parser<Object> {
 		logger.print(String.format("parsing cost from '%s'", input),
 				LogMessageType.PARSER);
 		truncate(input, "cost=");
-		final float from = getFloat(input);
+		final float from = parseFloat(input);
 		truncate(input, "..");
-		final float to = getFloat(input);
+		final float to = parseFloat(input);
 		return new Cost(from, to);
 	}
 }

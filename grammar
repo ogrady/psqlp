@@ -1,0 +1,19 @@
+RELOPTINFO = "RELOPTINFO (",RELIDS,"): ",ROWS," ",WIDTH,LBR,[TAB,"baserestrictinfo: ",RESTRICT,LBR],[JOININFO],PATHLIST,LBR
+RESTRICT = [EXPRESSION{", ",EXPRESSION}]
+BASERESTRICTCLAUSES = TAB,"baseretrictinfo: ",RESTRICT,LBR
+CLAUSES = " clauses: ",RESTRICT,LBR
+JOININFO = TAB,"joininfo: ",RESTRICT,LBR
+PATHLIST = TAB,"path list:",LBR,{PATH},[CHEAPEST_STARTUP],[CHEAPEST_TOTAL]
+CHEAPEST_STARTUP = LBR,TAB,"cheapest startup path:",LBR,PATH
+CHEAPEST_TOTAL = LBR,TAB,"cheapest total path:",LBR,PATH
+PATH = {TAB},STRATEGY,["(",RELIDS,") ",ROWS]," ",COST,LBR,[{TAB}," pathkeys: ",PATHKEYS],[JOIN]
+JOIN = {TAB}," clauses: ",RESTRICT,LBR,[MERGEPATH],PATH,PATH,{PATH}
+MARGEPATH = {TAB},"sortouter=",ZO," sortinner=",ZO," materializeinner=",ZO,LBR
+PATHKEYS = "((",STRING,{", ",STRING,"))"
+EXPRESSION = STRING
+ROWS = "rows=",NR
+WIDTH = "width=",NR
+COST = "cost=",NR,"..",NR
+ZO = "0"|"1"
+RELIDS = NR,{ NR}
+STRATEGY = "IdxScan", "SeqScan", "HashJoin", "NestLoop", "Material", "BitmapHeapScan", "BitmapAndPath", "BitmapOrPath", "TidScan", "ForeignScan", "Append", "MergeAppend", "Result", "Unique", "MergeJoin"

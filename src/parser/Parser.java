@@ -24,12 +24,12 @@ import exception.ResultParseException;
  *            of parsable object is yielded from the specific parser
  */
 public abstract class Parser<P> implements IParser<List<String>, P> {
-	private static final Pattern INTEGER_PATTERN = Pattern.compile("^\\d+");
-	private static final Pattern FLOAT_PATTERN = Pattern
+	protected static final Pattern INTEGER_PATTERN = Pattern.compile("^\\d+");
+	protected static final Pattern FLOAT_PATTERN = Pattern
 			.compile("^\\d+(.\\d+)?");
-	private static final Pattern BOOLEAN_PATTERN = Pattern.compile(
+	protected static final Pattern BOOLEAN_PATTERN = Pattern.compile(
 			"^(true|false)", Pattern.CASE_INSENSITIVE);
-	private static final Pattern WHITESPACE_PATTERN = Pattern.compile("\\s*");
+	protected static final Pattern WHITESPACE_PATTERN = Pattern.compile("\\s*");
 
 	/**
 	 * Checks whether the beginning of the input meets the expectation. If so
@@ -47,6 +47,14 @@ public abstract class Parser<P> implements IParser<List<String>, P> {
 	protected void checkNext(final String input, final String expected)
 			throws ParseException {
 		if (!lookahead(new StringBuilder(input), expected)) {
+			throw formException(String.format(
+					"invalid token '%s' - expected '%s'", input, expected));
+		}
+	}
+
+	protected void checkExpected(final StringBuilder input,
+			final String expected) throws ParseException {
+		if (!lookahead(input, expected)) {
 			throw formException(String.format(
 					"invalid token '%s' - expected '%s'", input, expected));
 		}
@@ -77,7 +85,7 @@ public abstract class Parser<P> implements IParser<List<String>, P> {
 	 */
 	protected void truncate(final StringBuilder input, final String prefix)
 			throws ParseException {
-		trimFront(input);
+		// trimFront(input);
 		if (prefix != null) {
 			if (!input.toString().startsWith(prefix)) {
 				throw formException(String.format(
@@ -86,29 +94,6 @@ public abstract class Parser<P> implements IParser<List<String>, P> {
 				input.delete(0, prefix.length());
 			}
 		}
-	}
-
-	/**
-	 * Removes the next line from the list of lines, removes a portion (the
-	 * prefix) from that line and returns the remainder as integer
-	 * 
-	 * @param input
-	 *            input string
-	 * @return remaining string parsed to integer
-	 * @throws ParseException
-	 */
-	protected Integer getInt(final StringBuilder input) throws ParseException {
-		Integer nr = null;
-		final String token = match(input, INTEGER_PATTERN);
-		if (token != null) {
-			try {
-				nr = Integer.parseInt(token);
-			} catch (final NumberFormatException nfe) {
-				throw formException(String.format("malformed integer '%s'",
-						token));
-			}
-		}
-		return nr;
 	}
 
 	protected String match(final StringBuilder input, final Pattern pattern)
@@ -123,6 +108,29 @@ public abstract class Parser<P> implements IParser<List<String>, P> {
 	}
 
 	/**
+	 * Removes the next line from the list of lines, removes a portion (the
+	 * prefix) from that line and returns the remainder as integer
+	 * 
+	 * @param input
+	 *            input string
+	 * @return remaining string parsed to integer
+	 * @throws ParseException
+	 */
+	protected Integer parseInt(final StringBuilder input) throws ParseException {
+		Integer nr = null;
+		final String token = match(input, INTEGER_PATTERN);
+		if (token != null) {
+			try {
+				nr = Integer.parseInt(token);
+			} catch (final NumberFormatException nfe) {
+				throw formException(String.format("malformed integer '%s'",
+						token));
+			}
+		}
+		return nr;
+	}
+
+	/**
 	 * Removes a portion (the prefix) from the input and returns the remainder
 	 * as boolean
 	 * 
@@ -133,11 +141,12 @@ public abstract class Parser<P> implements IParser<List<String>, P> {
 	 * @return remaining string parsed to boolean
 	 * @throws ParseException
 	 */
-	protected Boolean getBool(final StringBuilder input) throws ParseException {
+	protected Boolean parseBoolean(final StringBuilder input)
+			throws ParseException {
 		return Boolean.parseBoolean(match(input, BOOLEAN_PATTERN));
 	}
 
-	protected Float getFloat(final StringBuilder input) throws ParseException {
+	protected Float parseFloat(final StringBuilder input) throws ParseException {
 		Float nr = null;
 		final String token = match(input, FLOAT_PATTERN);
 		if (token != null) {
