@@ -1,7 +1,7 @@
 package structure;
 
-import gui.IRenderable;
-import gui.VisualNode;
+import gui.renderer.IRenderable;
+import gui.tree.VisualNode;
 
 /**
  * TreeNodes are one node of a generic Tree. They are representable in terms of

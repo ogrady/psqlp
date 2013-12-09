@@ -1,7 +1,4 @@
-package gui;
-
-import gui.renderer.Popup;
-import gui.tree.VisualNode;
+package gui.tree;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -17,25 +14,15 @@ import javax.swing.JPanel;
 import structure.Tree;
 import structure.TreeNode;
 
-/**
- * Displays render trees of any kind. They make a (somewhat inefficient)
- * division of the size of the Display so that the root of the tree is always at
- * the top of the tree in the middle of the Display. Subtrees will have equalliy
- * devided space to the left and right to the root. Even if they are not equally
- * width. This waste-issue is fixed by zooming in on certain areas of the tree
- * from the Visualization.
- * 
- * @author Daniel
- * 
- */
-public class Display extends JPanel {
+public class TreeDisplay<T> extends JPanel {
 	private static final long serialVersionUID = 1L;
 	private static final int MARGIN = 50;
 	private static final int WIDTH = 60;
 	private static final int HEIGHT = 30;
 	private final List<VisualNode> _visualNodes;
-	private Tree<?> _tree;
-	private final JFrame _parent;
+	private Tree<T> _tree;
+
+	// private final JFrame _parent;
 
 	/**
 	 * Constructor
@@ -43,12 +30,35 @@ public class Display extends JPanel {
 	 * @param size
 	 *            initial size for the Display
 	 */
-	public Display(final JFrame parent, final Dimension size) {
+	public TreeDisplay(final JFrame parent, final Dimension size) {
 		setSize(size);
-		_parent = parent;
+		// _parent = parent;
 		_visualNodes = new ArrayList<VisualNode>();
 		setBackground(Color.WHITE);
-		// setLayout(null);
+		setLayout(null);
+		addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(final MouseEvent me) {
+				zoom(me.getButton() == MouseEvent.BUTTON1 ? 2 : 0.5f);
+			}
+		});
+	}
+
+	/**
+	 * Zooms in on the display which solves the problem of crowded areas of the
+	 * tree where nodes may overlap. Zooming in causes the Display to show a
+	 * scrollbar. It then repaints the whole tree to fit the size again.
+	 * 
+	 * @param factor
+	 *            the factor by which to zoom (2 for doubled size, 0.5f for
+	 *            zooming out)
+	 */
+	public void zoom(final float factor) {
+		setPreferredSize(new Dimension((int) (getSize().width * factor),
+				(int) (getSize().height * factor)));
+		reTree();
+		repaint();
+		revalidate();
 	}
 
 	/**
@@ -66,7 +76,7 @@ public class Display extends JPanel {
 	 * @param tree
 	 *            the tree to represent from no on
 	 */
-	public void setTree(final Tree<?> tree) {
+	public void setTree(final Tree<T> tree) {
 		removeAll();
 		_visualNodes.clear();
 		createSubTree(tree._root, 0, getWidth());
@@ -111,12 +121,12 @@ public class Display extends JPanel {
 			createSubTree(rightChild, middle, right);
 		}
 		final VisualNode node = new VisualNode(root);
-		node.addMouseListener(new MouseAdapter() {
+		/*node.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(final MouseEvent me) {
 				new Popup(Display.this._parent).setVisible(true);
 			}
-		});
+		});*/
 		_visualNodes.add(node);
 		node.setBounds(middle, (root.getHeight() + 1) * MARGIN, WIDTH, HEIGHT);
 		add(node);

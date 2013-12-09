@@ -216,6 +216,15 @@ public class PlanParser extends Parser<Object> {
 		return new int[] { sortouter, sortinner, matinner };
 	}
 
+	public void removeIndent(final StringBuilder input, final int indent)
+			throws ParseException {
+		String prefix = "";
+		for (int i = 0; i < indent; i++) {
+			prefix += "\t";
+		}
+		truncate(input, prefix);
+	}
+
 	public static void main(final String[] args) throws ParseException {
 		final PlanParser p = new PlanParser();
 		p._buffer = new ArrayList<String>(

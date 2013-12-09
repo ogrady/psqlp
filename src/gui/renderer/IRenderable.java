@@ -1,4 +1,4 @@
-package gui;
+package gui.renderer;
 
 import javax.swing.JComponent;
 
