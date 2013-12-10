@@ -4,7 +4,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.swing.BoxLayout;
+import javax.swing.JButton;
 import javax.swing.JComponent;
+
+import parser.objects.RelOptInfo;
 
 /**
  * An Overview holds several blocks where each block represents one step within
@@ -18,6 +21,7 @@ import javax.swing.JComponent;
 public class Overview extends JComponent {
 	private static final long serialVersionUID = 1L;
 	private final Map<Integer, LevelDisplay> _levels;
+	private int _maxLevel;
 
 	/**
 	 * Constructor
@@ -35,11 +39,14 @@ public class Overview extends JComponent {
 	 *            silently
 	 */
 	public void addLevelDisplay(final int level) {
-		if (_levels.get(level) != null) {
-			final LevelDisplay newLevel = new LevelDisplay(level);
-			_levels.put(level, newLevel);
-			add(newLevel);
-
+		// if (_levels.get(level) == null) {
+		if (level > _maxLevel) {
+			for (int i = _maxLevel; i <= level; i++) {
+				final LevelDisplay newLevel = new LevelDisplay(i);
+				_levels.put(level, newLevel);
+				add(newLevel);
+			}
+			_maxLevel = level;
 		} else {
 			System.err.println("level already exists");
 		}
@@ -55,10 +62,10 @@ public class Overview extends JComponent {
 	 * @param level
 	 *            the level-number
 	 */
-	public void addElement(final Object element, final int level) {
-		if (_levels.get(level) == null) {
-			addLevelDisplay(level);
-		}
-		// _levels.get(level)
+	public void addRelOptInfo(final RelOptInfo relopt, final int level) {
+		addLevelDisplay(level);
+		final LevelDisplay display = _levels.get(level);
+		display.add(new JButton(relopt._ids.toString()));
+		revalidate();
 	}
 }

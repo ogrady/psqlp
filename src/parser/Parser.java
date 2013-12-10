@@ -174,7 +174,17 @@ public abstract class Parser<P> implements IParser<List<String>, P> {
 		if (matcher.find()) {
 			whitespaces = matcher.group().length();
 		}
+		// TODO use getIndent
 		sb.delete(0, whitespaces);
+	}
+
+	protected int getIndent(final StringBuilder sb) {
+		int whitespaces = 0;
+		final Matcher matcher = WHITESPACE_PATTERN.matcher(sb.toString());
+		if (matcher.find()) {
+			whitespaces = matcher.group().length();
+		}
+		return whitespaces;
 	}
 
 	/**

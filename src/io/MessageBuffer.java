@@ -5,21 +5,18 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import parser.Parser;
-import exception.ParseException;
-
 /**
  * The message buffer keeps track of the incoming messages from the continous
  * stream from the log file. Whenever we receive a new message starting with
- * "RELOPTINFO" we close our former buffer and send it to the parser and start a
- * new buffer for upcoming messages.
+ * "RELOPTINFO" we close our former buffer and send it to the messagereceiver
+ * that is interested in the block and start a new buffer for upcoming messages.
  * 
  * @author Daniel
  * 
  */
 public class MessageBuffer implements IInputReceiver {
 	private final List<String> _buffer;
-	private final Parser<?> _parser;
+	private final IMessageReceiver _receiver;
 	private int _indent;
 
 	/**
@@ -29,9 +26,9 @@ public class MessageBuffer implements IInputReceiver {
 	 *            the parser the input is passed to once the buffer is full (in
 	 *            termes of "contains a complete message")
 	 */
-	public MessageBuffer(final Parser<?> messageParser) {
+	public MessageBuffer(final IMessageReceiver receiver) {
 		_buffer = new ArrayList<String>();
-		_parser = messageParser;
+		_receiver = receiver;
 		_indent = -1;
 	}
 
@@ -55,17 +52,13 @@ public class MessageBuffer implements IInputReceiver {
 			// same as
 			// the line that started the block
 			// -> the block has ended and a new block has started
-			// -> parse the old block and clear the buffer
+			// -> pass the old block and clear the buffer
 			else if (getIndent(rawLine) == _indent) {
-				try {
-					_parser.parse(_buffer);
-				} catch (final ParseException e) {
-					e.printStackTrace();
-				}
+				_receiver.receive(_buffer);
 				_buffer.clear();
 			}
 			if (relevant(rawLine)) {
-				_buffer.add(trimmed);
+				_buffer.add(preprocess(rawLine));
 			}
 		}
 	}
@@ -83,6 +76,22 @@ public class MessageBuffer implements IInputReceiver {
 		final Pattern whitespaces = Pattern.compile("^\\s*");
 		final Matcher matcher = whitespaces.matcher(line);
 		return matcher.find() ? matcher.group().length() : 0;
+	}
+
+	/**
+	 * Preprocesses the line. Replaces leading whitespaces with tabs
+	 * 
+	 * @param line
+	 *            raw line
+	 * @return preprocessed line
+	 */
+	public String preprocess(final String line) {
+		String trimmed = line.trim();
+		final int indent = getIndent(line);
+		for (int i = 0; i < indent; i++) {
+			trimmed = "\t" + trimmed;
+		}
+		return trimmed;
 	}
 
 	/**

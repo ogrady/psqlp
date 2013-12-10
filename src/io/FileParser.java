@@ -3,16 +3,18 @@ package io;
 import java.io.File;
 import java.io.IOException;
 
-import parser.RelOptParser;
+import structure.Backend;
 
 public class FileParser {
+	public final Backend _backend;
 	private final ContinuousInputStream _stream;
 	private final IInputReceiver _receiver;
 	private Thread _thread;
 
 	public FileParser() {
 		_stream = new ContinuousInputStream();
-		_receiver = new MessageBuffer(new RelOptParser());
+		_backend = new Backend();
+		_receiver = new MessageBuffer(_backend);
 	}
 
 	public void read(final File file) {
@@ -23,7 +25,8 @@ public class FileParser {
 			@Override
 			public void run() {
 				try {
-					_stream.read(file, _receiver, true);
+					// TODO change to true
+					_stream.read(file, _receiver, false);
 				} catch (final IOException e) {
 					e.printStackTrace();
 				}

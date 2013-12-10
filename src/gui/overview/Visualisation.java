@@ -17,13 +17,16 @@ import javax.swing.JMenuItem;
 import javax.swing.JScrollPane;
 import javax.swing.KeyStroke;
 
+import listener.IBackendListener;
+import parser.objects.RelOptInfo;
+
 /**
  * GUI that holds a overview on all levels of the join
  * 
  * @author Daniel
  * 
  */
-public class Visualisation extends JFrame {
+public class Visualisation extends JFrame implements IBackendListener {
 	private static final long serialVersionUID = 1L;
 	private final Overview _overview;
 	private final JScrollPane _scrollpane;
@@ -43,6 +46,7 @@ public class Visualisation extends JFrame {
 		_overview = new Overview();
 		_scrollpane = new JScrollPane(_overview);
 		_parser = new FileParser();
+		_parser._backend.getListeners().registerListener(this);
 		setJMenuBar(createMenu());
 		add(_scrollpane, BorderLayout.CENTER);
 	}
@@ -107,5 +111,10 @@ public class Visualisation extends JFrame {
 	public static void main(final String[] args) {
 		final Visualisation v = new Visualisation(new Dimension(800, 500));
 		v.setVisible(true);
+	}
+
+	@Override
+	public void onNewRelOptInfo(final RelOptInfo roi) {
+		_overview.addRelOptInfo(roi, roi._ids.size());
 	}
 }

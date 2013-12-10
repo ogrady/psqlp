@@ -6,7 +6,7 @@ JOININFO = TAB,"joininfo: ",RESTRICT,LBR
 PATHLIST = TAB,"path list:",LBR,{PATH},[CHEAPEST_STARTUP],[CHEAPEST_TOTAL]
 CHEAPEST_STARTUP = LBR,TAB,"cheapest startup path:",LBR,PATH
 CHEAPEST_TOTAL = LBR,TAB,"cheapest total path:",LBR,PATH
-PATH = {TAB},STRATEGY,["(",RELIDS,") ",ROWS]," ",COST,LBR,[{TAB}," pathkeys: ",PATHKEYS],[JOIN]
+PATH = {TAB},STRATEGY,["(",RELIDS,") ",ROWS]," ",COST,LBR,["  pathkeys: ",PATHKEYS,LBR],[JOIN]
 JOIN = {TAB}," clauses: ",RESTRICT,LBR,[MERGEPATH],PATH,PATH,{PATH}
 MARGEPATH = {TAB},"sortouter=",ZO," sortinner=",ZO," materializeinner=",ZO,LBR
 PATHKEYS = "((",STRING,{", ",STRING,"))"

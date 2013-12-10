@@ -8,7 +8,7 @@ import java.awt.Dimension;
 import java.io.File;
 import java.io.IOException;
 
-import parser.RelOptParser;
+import structure.Backend;
 
 public class Test {
 	public static void main(final String[] args) throws IOException {
@@ -29,7 +29,7 @@ public class Test {
 			gui.read(new File(filename));
 		} else {
 			new ContinuousInputStream().read(new File(filename),
-					new MessageBuffer(new RelOptParser()), !fromStart);
+					new MessageBuffer(new Backend()), !fromStart);
 		}
 
 	}

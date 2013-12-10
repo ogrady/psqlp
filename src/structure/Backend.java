@@ -1,6 +1,27 @@
 package structure;
 
-public class Backend {
+import io.IMessageReceiver;
+
+import java.util.List;
+
+import listener.IBackendListener;
+import listener.IListenable;
+import listener.INotifier;
+import listener.ListenerSet;
+import parser.Parser;
+import parser.RelOptInfoParser;
+import parser.objects.RelOptInfo;
+import exception.ParseException;
+
+public class Backend implements IMessageReceiver, IListenable<IBackendListener> {
+	private final Parser<RelOptInfo> _parser;
+	private final ListenerSet<IBackendListener> _listeners;
+
+	public Backend() {
+		_parser = new RelOptInfoParser();
+		_listeners = new ListenerSet<IBackendListener>();
+	}
+
 	public Tree<?> getTree() {
 		TreeNode<Integer> node = null;
 		TreeNode<Integer> left = null;
@@ -18,5 +39,25 @@ public class Backend {
 			left = node;
 		}
 		return new Tree<Integer>(node);
+	}
+
+	@Override
+	public void receive(final List<String> buffer) {
+		try {
+			final RelOptInfo roi = _parser.parse(buffer);
+			_listeners.notify(new INotifier<IBackendListener>() {
+				@Override
+				public void notify(final IBackendListener listener) {
+					listener.onNewRelOptInfo(roi);
+				}
+			});
+		} catch (final ParseException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public ListenerSet<IBackendListener> getListeners() {
+		return _listeners;
 	}
 }
