@@ -1,5 +1,8 @@
 package gui.overview;
 
+import io.logger.LogMessageType;
+import io.logger.Logger;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -22,11 +25,13 @@ public class Overview extends JComponent {
 	private static final long serialVersionUID = 1L;
 	private final Map<Integer, LevelDisplay> _levels;
 	private int _maxLevel;
+	private final Logger _logger;
 
 	/**
 	 * Constructor
 	 */
-	public Overview() {
+	public Overview(final Logger logger) {
+		_logger = logger;
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		_levels = new HashMap<Integer, LevelDisplay>();
 	}
@@ -39,16 +44,15 @@ public class Overview extends JComponent {
 	 *            silently
 	 */
 	public void addLevelDisplay(final int level) {
-		// if (_levels.get(level) == null) {
 		if (level > _maxLevel) {
-			for (int i = _maxLevel; i <= level; i++) {
+			for (int i = _maxLevel + 1; i <= level; i++) {
 				final LevelDisplay newLevel = new LevelDisplay(i);
 				_levels.put(level, newLevel);
 				add(newLevel);
 			}
 			_maxLevel = level;
 		} else {
-			System.err.println("level already exists");
+			_logger.print("level already exists", LogMessageType.WARNING);
 		}
 
 	}

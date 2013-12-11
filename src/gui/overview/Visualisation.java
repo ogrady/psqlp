@@ -1,6 +1,7 @@
 package gui.overview;
 
 import io.FileParser;
+import io.logger.Logger;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -31,6 +32,7 @@ public class Visualisation extends JFrame implements IBackendListener {
 	private final Overview _overview;
 	private final JScrollPane _scrollpane;
 	private final FileParser _parser;
+	public final Logger _logger;
 
 	/**
 	 * Constructor
@@ -43,9 +45,10 @@ public class Visualisation extends JFrame implements IBackendListener {
 		setSize(size);
 		setLayout(new BorderLayout());
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
-		_overview = new Overview();
+		_logger = new Logger();
+		_overview = new Overview(_logger);
 		_scrollpane = new JScrollPane(_overview);
-		_parser = new FileParser();
+		_parser = new FileParser(_logger);
 		_parser._backend.getListeners().registerListener(this);
 		setJMenuBar(createMenu());
 		add(_scrollpane, BorderLayout.CENTER);

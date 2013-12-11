@@ -1,5 +1,7 @@
 package io;
 
+import io.logger.Logger;
+
 import java.io.File;
 import java.io.IOException;
 
@@ -10,10 +12,12 @@ public class FileParser {
 	private final ContinuousInputStream _stream;
 	private final IInputReceiver _receiver;
 	private Thread _thread;
+	public final Logger _logger;
 
-	public FileParser() {
+	public FileParser(final Logger logger) {
+		_logger = logger;
 		_stream = new ContinuousInputStream();
-		_backend = new Backend();
+		_backend = new Backend(_logger);
 		_receiver = new MessageBuffer(_backend);
 	}
 

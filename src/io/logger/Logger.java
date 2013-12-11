@@ -38,6 +38,7 @@ public class Logger {
 	 * <ul>
 	 * <li>GENERAL for general debug messages (discouraged)</li>
 	 * <li>ERROR for unspecified errors, like printing out an exception</li>
+	 * <li>WARNING for unspecified warnings</li>
 	 * <li>INFO for info message like loadout</li>
 	 * </ul>
 	 * 
@@ -47,7 +48,7 @@ public class Logger {
 		_accepted = new EnumBitmask<LogMessageType>();
 		setSink(sink);
 		accept(LogMessageType.GENERAL, LogMessageType.INFO,
-				LogMessageType.ERROR);
+				LogMessageType.ERROR, LogMessageType.WARNING);
 	}
 
 	/**

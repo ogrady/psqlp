@@ -1,6 +1,7 @@
 package structure;
 
 import io.IMessageReceiver;
+import io.logger.Logger;
 
 import java.util.List;
 
@@ -14,11 +15,13 @@ import parser.objects.RelOptInfo;
 import exception.ParseException;
 
 public class Backend implements IMessageReceiver, IListenable<IBackendListener> {
+	public final Logger _logger;
 	private final Parser<RelOptInfo> _parser;
 	private final ListenerSet<IBackendListener> _listeners;
 
-	public Backend() {
-		_parser = new RelOptInfoParser();
+	public Backend(final Logger logger) {
+		_logger = logger;
+		_parser = new RelOptInfoParser(_logger);
 		_listeners = new ListenerSet<IBackendListener>();
 	}
 

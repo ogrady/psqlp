@@ -18,9 +18,10 @@ public class RelOptInfoParser extends Parser<RelOptInfo> {
 	private List<String> _buffer;
 	private final Logger _logger;
 
-	public RelOptInfoParser() {
-		_logger = new Logger();
-		_logger.accept(LogMessageType.PARSER);
+	public RelOptInfoParser(final Logger logger) {
+		/*_logger = new Logger();
+		_logger.accept(LogMessageType.PARSER);*/
+		_logger = logger;
 	}
 
 	@Override
