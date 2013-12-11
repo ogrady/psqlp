@@ -1,6 +1,7 @@
 package structure;
 
 import io.IMessageReceiver;
+import io.logger.LogMessageType;
 import io.logger.Logger;
 
 import java.util.List;
@@ -48,6 +49,8 @@ public class Backend implements IMessageReceiver, IListenable<IBackendListener> 
 	public void receive(final List<String> buffer) {
 		try {
 			final RelOptInfo roi = _parser.parse(buffer);
+			_logger.print(String.format("new RelOptInfo '%s'", roi.toString()),
+					LogMessageType.BACKEND);
 			_listeners.notify(new INotifier<IBackendListener>() {
 				@Override
 				public void notify(final IBackendListener listener) {

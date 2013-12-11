@@ -125,6 +125,6 @@ public class TreeNode<T> implements IRenderable<VisualNode> {
 
 	@Override
 	public String toString() {
-		return _element.toString();
+		return _element != null ? _element.toString() : "ROOT IS NULL";
 	}
 }

@@ -1,5 +1,5 @@
 package io.logger;
 
 public enum LogMessageType {
-	GENERAL, ERROR, INFO, WARNING, PARSER
+	GENERAL, ERROR, INFO, WARNING, PARSER, BACKEND
 }

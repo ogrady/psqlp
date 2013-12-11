@@ -1,15 +1,22 @@
 package gui.overview;
 
+import gui.tree.TreeFactory;
+import gui.tree.TreePopup;
 import io.logger.LogMessageType;
 import io.logger.Logger;
 
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComponent;
+import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
 
+import parser.objects.Path;
 import parser.objects.RelOptInfo;
 
 /**
@@ -69,7 +76,20 @@ public class Overview extends JComponent {
 	public void addRelOptInfo(final RelOptInfo relopt, final int level) {
 		addLevelDisplay(level);
 		final LevelDisplay display = _levels.get(level);
-		display.add(new JButton(relopt._ids.toString()));
+		final JButton bu = new JButton(relopt._ids.toString());
+		bu.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(final MouseEvent me) {
+				final TreePopup<Path> popup = new TreePopup<Path>(
+						(JFrame) SwingUtilities.getRoot(Overview.this));
+				for (final Path p : relopt._pathlist) {
+					popup._trees.addTree(TreeFactory.treeify(p));
+				}
+				// popup._trees.addTree(TreeFactory.treeify(relopt._cheapestTotal));
+				popup.setVisible(true);
+			}
+		});
+		display.add(bu);
 		revalidate();
 	}
 }

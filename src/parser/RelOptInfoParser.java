@@ -3,6 +3,7 @@ package parser;
 import io.logger.LogMessageType;
 import io.logger.Logger;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -222,6 +223,9 @@ public class RelOptInfoParser extends Parser<RelOptInfo> {
 		final Cost cost = parseCost(input, indent);
 		linebreak(input);
 		String pathkeys = null;
+		System.out.println(input);
+		System.out.println(indent);
+		// pause();
 		removeIndent(input, indent);
 		// note: normally there would be two leading whitespaces instead of two
 		// tabs. But since we replaced all leading whitespaces with tabs to
@@ -232,6 +236,7 @@ public class RelOptInfoParser extends Parser<RelOptInfo> {
 			linebreak(input);
 		}
 		Join join = null;
+		// additional tab?
 		if (lookahead(input, "\t\tclauses: ")) {
 			join = parseJoin(input, indent);
 		}
@@ -282,5 +287,14 @@ public class RelOptInfoParser extends Parser<RelOptInfo> {
 			prefix += "\t";
 		}
 		truncate(input, prefix);
+	}
+
+	public static void pause() {
+		try {
+			System.in.read();
+		} catch (final IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }

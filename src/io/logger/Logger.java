@@ -104,6 +104,10 @@ public class Logger {
 		}
 	}
 
+	public void acceptAll() {
+		accept(LogMessageType.values());
+	}
+
 	/**
 	 * Ignores a set of message-types
 	 * 

@@ -46,6 +46,7 @@ public class Visualisation extends JFrame implements IBackendListener {
 		setLayout(new BorderLayout());
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		_logger = new Logger();
+		_logger.acceptAll();
 		_overview = new Overview(_logger);
 		_scrollpane = new JScrollPane(_overview);
 		_parser = new FileParser(_logger);
@@ -111,13 +112,14 @@ public class Visualisation extends JFrame implements IBackendListener {
 		return menuBar;
 	}
 
-	public static void main(final String[] args) {
-		final Visualisation v = new Visualisation(new Dimension(800, 500));
-		v.setVisible(true);
-	}
-
 	@Override
 	public void onNewRelOptInfo(final RelOptInfo roi) {
 		_overview.addRelOptInfo(roi, roi._ids.size());
+	}
+
+	public static void main(final String[] args) {
+		final Visualisation v = new Visualisation(new Dimension(800, 500));
+		v.setVisible(true);
+		v.read(new File("C:\\Users\\Daniel\\Desktop\\_dummy"));
 	}
 }
