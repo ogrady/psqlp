@@ -1,5 +1,6 @@
-package gui.overview;
+package gui;
 
+import gui.overview.Overview;
 import io.FileParser;
 import io.logger.Logger;
 
@@ -120,6 +121,7 @@ public class Visualisation extends JFrame implements IBackendListener {
 	public static void main(final String[] args) {
 		final Visualisation v = new Visualisation(new Dimension(800, 500));
 		v.setVisible(true);
+		// v._logger.ignoreAll();
 		v.read(new File("C:\\Users\\Daniel\\Desktop\\_dummy"));
 	}
 }

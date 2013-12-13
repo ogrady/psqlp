@@ -20,6 +20,7 @@ public class Path {
 	public final Cost _cost;
 	public final String _pathkeys;
 	public final Join _join;
+	public final Path _subpath;
 
 	/**
 	 * Constructor
@@ -40,13 +41,14 @@ public class Path {
 	 */
 	public Path(final List<Integer> ids, final AccessStrategy strategy,
 			final int rows, final Cost cost, final String pathkeys,
-			final Join join) {
+			final Join join, final Path subpath) {
 		_ids = ids;
 		_strategy = strategy;
 		_rows = rows;
 		_cost = cost;
 		_pathkeys = pathkeys;
 		_join = join;
+		_subpath = subpath;
 	}
 
 	/**
@@ -71,7 +73,8 @@ public class Path {
 	@Override
 	public String toString() {
 		return String
-				.format("Path[\r\n id: %s \r\n astrat: %s \r\n rows: %d \r\n cost: %s\r\n pathkeys: %s \r\n clauses: %s \r\n]",
-						_ids, _strategy, _rows, _cost, _pathkeys, _join);
+				.format("Path[\r\n id: %s \r\n astrat: %s \r\n rows: %d \r\n cost: %s\r\n pathkeys: %s \r\n clauses: %s \r\n subpath: %s \r\n]",
+						_ids, _strategy, _rows, _cost, _pathkeys, _join,
+						_subpath);
 	}
 }

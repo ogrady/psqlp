@@ -10,7 +10,6 @@ import java.util.List;
 import parser.objects.Cost;
 import parser.objects.Join;
 import parser.objects.Path;
-import parser.objects.PathList;
 import parser.objects.RelOptInfo;
 import parser.objects.plan.AccessStrategy;
 import exception.ParseException;
@@ -20,8 +19,6 @@ public class RelOptInfoParser extends Parser<RelOptInfo> {
 	private final Logger _logger;
 
 	public RelOptInfoParser(final Logger logger) {
-		/*_logger = new Logger();
-		_logger.accept(LogMessageType.PARSER);*/
 		_logger = logger;
 	}
 
@@ -32,15 +29,25 @@ public class RelOptInfoParser extends Parser<RelOptInfo> {
 		return parseRelOptInfo(firstLine, getIndent(firstLine));
 	}
 
-	private void log(final String thing, final StringBuilder from) {
+	private void logIn(final String thing, final StringBuilder from) {
 		_logger.print(
 				String.format("parsing %s from '%s'", thing, from.toString()),
-				LogMessageType.PARSER);
+				LogMessageType.PARSER_IN);
+	}
+
+	private void logOut(final Object thing) {
+		_logger.print(String.format("successfully parsed '%s'", thing),
+				LogMessageType.PARSER_OUT);
+	}
+
+	private void logFail(final String thing) {
+		_logger.print(String.format("could not parse any %s", thing),
+				LogMessageType.PARSER_FAIL);
 	}
 
 	public RelOptInfo parseRelOptInfo(final StringBuilder input,
 			final int indent) throws ParseException {
-		log("RelOptInfo", input);
+		logIn("RelOptInfo", input);
 		removeIndent(input, indent);
 		truncate(input, "RELOPTINFO (");
 		final List<Integer> ids = parseRelIds(input, indent);
@@ -49,57 +56,78 @@ public class RelOptInfoParser extends Parser<RelOptInfo> {
 		truncate(input, " ");
 		final int width = parseWidth(input, indent);
 		linebreak(input);
-		String baserestrictinfo = null;
-		final String joininfo = null;
+		String baserestrictinfo = null, joininfo = null;
 		removeIndent(input, indent);
 		if (lookahead(input, "\tbaserestrictinfo: ")) {
 			baserestrictinfo = parseBaseRestrictinfo(input, indent);
-			// linebreak(input);
 			removeIndent(input, indent);
 		}
 		if (lookahead(input, "\tjoininfo: ")) {
-			parseJoinInfo(input, indent);
+			joininfo = parseJoinInfo(input, indent);
+			removeIndent(input, indent);
 		}
-		final PathList pathlist = parsePathList(input, indent);
+		final List<Path> pathlist = parsePathList(input, indent + 1);
+		Path cheapestStartup = null, cheapestTotal = null;
+		if (lookahead(input, "\tcheapest startup path:")) {
+			logIn("cheapest startup path", input);
+			cheapestStartup = parseCheapestStartupPath(input, indent + 1);
+		} else {
+			logFail("cheapest startup path");
+		}
+		if (lookahead(input, "\tcheapest total path:")) {
+			logIn("cheapest total path", input);
+			cheapestTotal = parseCheapestTotalPath(input, indent + 1);
+		} else {
+			logFail("cheapest total path");
+		}
 		linebreak(input);
-		return new RelOptInfo(ids, rows, width, baserestrictinfo, joininfo,
-				pathlist._paths, pathlist._cheapestStartup,
-				pathlist._cheapestTotal);
+		final RelOptInfo reloptinfo = new RelOptInfo(ids, rows, width,
+				baserestrictinfo, joininfo, pathlist, cheapestStartup,
+				cheapestTotal);
+		logOut(reloptinfo);
+		return reloptinfo;
 	}
 
 	public List<Integer> parseRelIds(final StringBuilder input, final int indent)
 			throws ParseException {
-		log("IDs", input);
+		logIn("IDs", input);
 		final List<Integer> ids = new ArrayList<Integer>();
 		while (!lookahead(input, "\\)")) {
 			ids.add(parseInt(input));
 			trimFront(input);
 		}
+		logOut(ids);
 		return ids;
 	}
 
 	public int parseRows(final StringBuilder input, final int indent)
 			throws ParseException {
-		log("rows", input);
+		logIn("rows", input);
 		truncate(input, "rows=");
-		return parseInt(input);
+		final int rows = parseInt(input);
+		logOut(rows);
+		return rows;
 	}
 
 	public int parseWidth(final StringBuilder input, final int indent)
 			throws ParseException {
-		log("width", input);
+		logIn("width", input);
 		truncate(input, "width=");
-		return parseInt(input);
+		final int width = parseInt(input);
+		logOut(width);
+		return width;
 	}
 
 	public Cost parseCost(final StringBuilder input, final int indent)
 			throws ParseException {
-		log("costs", input);
+		logIn("costs", input);
 		truncate(input, "cost=");
 		final float startup = parseFloat(input);
 		truncate(input, "..");
 		final float total = parseFloat(input);
-		return new Cost(startup, total);
+		final Cost cost = new Cost(startup, total);
+		logOut(cost);
+		return cost;
 	}
 
 	public void removeTab(final StringBuilder input) throws ParseException {
@@ -119,34 +147,37 @@ public class RelOptInfoParser extends Parser<RelOptInfo> {
 
 	public String parseJoinInfo(final StringBuilder input, final int indent)
 			throws ParseException {
-		log("joininfo", input);
+		logIn("joininfo", input);
 		truncate(input, "\tjoininfo: ");
-		final String info = input.toString();
+		final String info = consume(input);
 		linebreak(input);
+		logOut(info);
 		return info;
 	}
 
 	public String parseClauses(final StringBuilder input, final int indent)
 			throws ParseException {
-		log("clauses", input);
+		logIn("clauses", input);
 		truncate(input, " clauses: ");
-		final String info = input.toString();
+		final String info = consume(input);
 		linebreak(input);
+		logOut(info);
 		return info;
 	}
 
 	public String parseBaseRestrictinfo(final StringBuilder input,
 			final int indent) throws ParseException {
-		log("baserestrictinfo", input);
+		logIn("baserestrictinfo", input);
 		truncate(input, "\tbaserestrictinfo: ");
-		final String info = input.toString();
+		final String info = consume(input);
 		linebreak(input);
+		logOut(info);
 		return info;
 	}
 
 	public Path parseCheapestStartupPath(final StringBuilder input,
 			final int indent) throws ParseException {
-		log("cheapest startup path", input);
+		logIn("cheapest startup path", input);
 		linebreak(input);
 		truncate(input, "\tcheapest startup path:");
 		linebreak(input);
@@ -155,14 +186,14 @@ public class RelOptInfoParser extends Parser<RelOptInfo> {
 
 	public Path parseCheapestTotalPath(final StringBuilder input,
 			final int indent) throws ParseException {
-		log("cheapest total path", input);
+		logIn("cheapest total path", input);
 		linebreak(input);
 		truncate(input, "\tcheapest total path:");
 		linebreak(input);
 		return parsePath(input, indent);
 	}
 
-	public PathList parsePathList(final StringBuilder input, final int indent)
+	/*public PathList parsePathList(final StringBuilder input, final int indent)
 			throws ParseException {
 		log("pathlist", input);
 		final ArrayList<Path> paths = new ArrayList<Path>();
@@ -184,11 +215,28 @@ public class RelOptInfoParser extends Parser<RelOptInfo> {
 			cheapestTotal = parseCheapestTotalPath(input, indent);
 		}
 		return new PathList(paths, cheapestStartup, cheapestTotal);
+	}*/
+	public List<Path> parsePathList(final StringBuilder input, final int indent)
+			throws ParseException {
+		logIn("pathlist", input);
+		final ArrayList<Path> paths = new ArrayList<Path>();
+		truncate(input, "\tpath list:");
+		linebreak(input);
+		try {
+			while (true) {
+				paths.add(parsePath(input, indent));
+				logOut(paths.get(paths.size() - 1));
+			}
+		} catch (final ParseException e) {
+			logOut(paths);
+			// this feels dirty...
+		}
+		return paths;
 	}
 
 	public AccessStrategy parseAccessStrategy(final StringBuilder input,
 			final int indent) throws ParseException {
-		log("access strategy", input);
+		logIn("access strategy", input);
 		final String internalString = input.toString();
 		int i = 0;
 		while (i < AccessStrategy.values().length
@@ -207,9 +255,8 @@ public class RelOptInfoParser extends Parser<RelOptInfo> {
 
 	public Path parsePath(final StringBuilder input, final int indent)
 			throws ParseException {
-		log("path", input);
+		logIn("path", input);
 		removeIndent(input, indent);
-		truncate(input, "\t");
 		final AccessStrategy strat = parseAccessStrategy(input, indent);
 		List<Integer> ids = new ArrayList<Integer>();
 		final int rows = 0;
@@ -223,54 +270,78 @@ public class RelOptInfoParser extends Parser<RelOptInfo> {
 		final Cost cost = parseCost(input, indent);
 		linebreak(input);
 		String pathkeys = null;
-		System.out.println(input);
-		System.out.println(indent);
+		/*System.out.println(input);
+		System.out.println(indent);*/
 		// pause();
 		removeIndent(input, indent);
 		// note: normally there would be two leading whitespaces instead of two
 		// tabs. But since we replaced all leading whitespaces with tabs to
 		// unify the indent we have to improvise here
 		if (lookahead(input, "\t\tpathkeys:")) {
+			logIn("pathkeys", input);
 			truncate(input, "\t\tpathkeys: ");
 			pathkeys = consume(input);
+			logOut(pathkeys);
 			linebreak(input);
+		} else {
+			logFail("pathkeys");
 		}
 		Join join = null;
-		// additional tab?
 		if (lookahead(input, "\t\tclauses: ")) {
 			join = parseJoin(input, indent);
+		} else {
+			logFail("join");
 		}
-		return new Path(ids, strat, rows, cost, pathkeys, join);
+		Path subpath = null;
+		try {
+			logIn("subpath", input);
+			subpath = parsePath(input, indent + 1);
+		} catch (final ParseException pe) {
+			logFail("path");
+		}
+		if (pathkeys == null && join == null && subpath == null) {
+			resetIndent(input, indent);
+		}
+		return new Path(ids, strat, rows, cost, pathkeys, join, subpath);
+	}
+
+	private void resetIndent(final StringBuilder input, final int indent) {
+		String restored = input.toString();
+		for (int i = 0; i < indent; i++) {
+			restored = "\t" + restored;
+		}
+		input.delete(0, input.length());
+		input.append(restored);
 	}
 
 	public Join parseJoin(final StringBuilder input, final int indent)
 			throws ParseException {
-		log("join", input);
+		logIn("join", input);
 		truncate(input, "\t\tclauses: ");
-		final String clauses = input.toString();
+		final String clauses = consume(input);
 		linebreak(input);
+		removeIndent(input, indent);
 		int sortouter = -1, sortinner = -1, materializeinner = -1;
-		if (lookahead(input, "\tsortouter=")) {
+		if (lookahead(input, "\t\tsortouter=")) {
 			final int[] mergepath = parseMergePath(input, indent);
 			sortouter = mergepath[0];
 			sortinner = mergepath[1];
 			materializeinner = mergepath[2];
+		} else {
+			resetIndent(input, indent);
 		}
+		logIn("outher join path", input);
 		final Path outerJoinPath = parsePath(input, indent + 1);
+		logIn("inner join path", input);
 		final Path innerJoinPath = parsePath(input, indent + 1);
-		Path subpath = null;
-		try {
-			subpath = parsePath(input, indent + 1);
-		} catch (final ParseException pe) {
-		}
 		return new Join(sortouter, sortinner, materializeinner, clauses,
-				outerJoinPath, innerJoinPath, subpath);
+				outerJoinPath, innerJoinPath);
 	}
 
 	public int[] parseMergePath(final StringBuilder input, final int indent)
 			throws ParseException {
-		log("mergepath", input);
-		truncate(input, "\tsortouter=");
+		logIn("mergepath", input);
+		truncate(input, "\t\tsortouter=");
 		final int sortouter = parseInt(input);
 		truncate(input, " sortinner=");
 		final int sortinner = parseInt(input);

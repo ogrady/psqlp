@@ -1,6 +1,6 @@
 package test;
 
-import gui.OldVisualisation;
+import gui.Visualisation;
 import io.ContinuousInputStream;
 import io.MessageBuffer;
 import io.logger.Logger;
@@ -25,7 +25,7 @@ public class Test {
 			withGui = Boolean.parseBoolean(args[2]);
 		}
 		if (withGui) {
-			final OldVisualisation gui = new OldVisualisation(new Dimension(800, 600));
+			final Visualisation gui = new Visualisation(new Dimension(800, 600));
 			gui.setVisible(true);
 			gui.read(new File(filename));
 		} else {

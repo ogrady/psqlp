@@ -18,6 +18,7 @@ import javax.swing.SwingUtilities;
 
 import parser.objects.Path;
 import parser.objects.RelOptInfo;
+import structure.Tree;
 
 /**
  * An Overview holds several blocks where each block represents one step within
@@ -81,11 +82,13 @@ public class Overview extends JComponent {
 			@Override
 			public void mouseClicked(final MouseEvent me) {
 				final TreePopup<Path> popup = new TreePopup<Path>(
-						(JFrame) SwingUtilities.getRoot(Overview.this));
+						(JFrame) SwingUtilities.getRoot(Overview.this), ""
+								+ Overview.this._maxLevel);
 				for (final Path p : relopt._pathlist) {
-					popup._trees.addTree(TreeFactory.treeify(p));
+					final Tree<Path> tree = TreeFactory.treeify(p);
+					popup._trees.addTree(tree,
+							tree._root._element._strategy.toString());
 				}
-				// popup._trees.addTree(TreeFactory.treeify(relopt._cheapestTotal));
 				popup.setVisible(true);
 			}
 		});

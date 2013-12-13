@@ -1,19 +1,11 @@
-RELOPTINFO = "RELOPTINFO (",RELIDS,"): ",ROWS," ",WIDTH,LBR,[TAB,"baserestrictinfo: ",RESTRICT,LBR],[JOININFO],PATHLIST,LBR
-RESTRICT = [EXPRESSION{", ",EXPRESSION}]
-BASERESTRICTCLAUSES = TAB,"baseretrictinfo: ",RESTRICT,LBR
-CLAUSES = " clauses: ",RESTRICT,LBR
-JOININFO = TAB,"joininfo: ",RESTRICT,LBR
-PATHLIST = TAB,"path list:",LBR,{PATH},[CHEAPEST_STARTUP],[CHEAPEST_TOTAL]
-CHEAPEST_STARTUP = LBR,TAB,"cheapest startup path:",LBR,PATH
-CHEAPEST_TOTAL = LBR,TAB,"cheapest total path:",LBR,PATH
-PATH = {TAB},STRATEGY,["(",RELIDS,") ",ROWS]," ",COST,LBR,["  pathkeys: ",PATHKEYS,LBR],[JOIN]
-JOIN = {TAB},CLAUSES,[MERGEPATH],PATH,PATH,{PATH}
-MARGEPATH = {TAB},"sortouter=",ZO," sortinner=",ZO," materializeinner=",ZO,LBR
-PATHKEYS = "((",STRING,{", ",STRING,"))"
-EXPRESSION = STRING
-ROWS = "rows=",NR
-WIDTH = "width=",NR
 COST = "cost=",NR,"..",NR
-ZO = "0"|"1"
-RELIDS = NR,{ NR}
+EXPRESSION = STRING
+PATH = INDENT, STRATEGY, ["(", RELIDS,") ",ROWS], " ", COST, LBR, [INDENT, "  pathkeys: ", PATHKEYS, LBR,] [INDENT,"  clauses: ", RESTRICTCLAUSES, LBR, [INDENT, "  sortouter=",ZO," sortinner=",ZO," materializeinner=",ZO,LBR], PATH(INDENT+1), PATH(INDENT+1)],[PATH(INDENT+1)]
+PATHKEYS = "((",STRING,{", ",STRING,"))", LBR
+RELIDS = NR,{" ",NR}
+RELOPTINFO = "RELOPTINFO (", RELIDS, "): ", ROWS, " ", WIDTH, LBR, ["\tbaserestrictinfo: ", RESTRICTCLAUSES, LBR], [TAB, "joininfo: ", RESTRICTCLAUSES, LBR], "\tpath list:", LBR, {PATH(1)}, [LBR,"\tcheapest startup path:", LBR, PATH(1),] [LBR, "\tcheapest total path:", LBR, PATH(1)], LBR
+RESTRICTCLAUSES = [STRING],{", ",STRING}
+ROWS = "rows=",NR
 STRATEGY = "IdxScan", "SeqScan", "HashJoin", "NestLoop", "Material", "BitmapHeapScan", "BitmapAndPath", "BitmapOrPath", "TidScan", "ForeignScan", "Append", "MergeAppend", "Result", "Unique", "MergeJoin"
+WIDTH = "width=",NR
+ZO = "0"|"1"

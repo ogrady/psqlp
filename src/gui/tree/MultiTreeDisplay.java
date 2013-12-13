@@ -28,7 +28,6 @@ public class MultiTreeDisplay<T> extends JComponent {
 		setLayout(new BorderLayout());
 		_tabs = new JTabbedPane();
 		add(_tabs, BorderLayout.CENTER);
-
 	}
 
 	/**
@@ -38,10 +37,10 @@ public class MultiTreeDisplay<T> extends JComponent {
 	 * @param tree
 	 *            the tree to add
 	 */
-	public void addTree(final Tree<T> tree) {
+	public void addTree(final Tree<T> tree, final String title) {
 		final TreeDisplay<T> display = new TreeDisplay<T>(null, getSize());
 		display.setTree(tree);
-		_tabs.addTab("a tab", new JScrollPane(display));
+		_tabs.addTab(title, new JScrollPane(display));
 	}
 
 }
