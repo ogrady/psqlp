@@ -1,7 +1,8 @@
 package structure;
 
 import gui.popup.IRenderable;
-import gui.tree.VisualNode;
+import gui.tree.ITreeable;
+import gui.tree.VisualTreeNode;
 
 /**
  * TreeNodes are one node of a generic Tree. They are representable in terms of
@@ -12,18 +13,19 @@ import gui.tree.VisualNode;
  * @param <T>
  *            datatype this node hold
  */
-public class TreeNode<T> implements IRenderable<VisualNode> {
+abstract public class TreeNode<T> implements IRenderable<VisualTreeNode>,
+		ITreeable {
 	private TreeNode<T> _parent, _leftChild, _rightChild;
 	public final T _element;
-	private VisualNode _representation;
+	private VisualTreeNode _representation;
 
 	@Override
-	public VisualNode getRepresentation() {
+	public VisualTreeNode getRepresentation() {
 		return _representation;
 	}
 
 	@Override
-	public void setRepresentation(final VisualNode representation) {
+	public void setRepresentation(final VisualTreeNode representation) {
 		_representation = representation;
 	}
 

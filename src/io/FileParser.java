@@ -10,7 +10,7 @@ import structure.Backend;
 public class FileParser {
 	public final Backend _backend;
 	private final ContinuousInputStream _stream;
-	private final IInputReceiver _receiver;
+	private final MessageBuffer _buffer;
 	private Thread _thread;
 	public final Logger _logger;
 
@@ -18,7 +18,7 @@ public class FileParser {
 		_logger = logger;
 		_stream = new ContinuousInputStream();
 		_backend = new Backend(_logger);
-		_receiver = new MessageBuffer(_backend);
+		_buffer = new MessageBuffer(_backend);
 	}
 
 	public void read(final File file) {
@@ -30,12 +30,17 @@ public class FileParser {
 			public void run() {
 				try {
 					// TODO change to true
-					_stream.read(file, _receiver, false);
+					_stream.read(file, _buffer, false);
 				} catch (final IOException e) {
 					e.printStackTrace();
 				}
 			}
 		});
 		_thread.start();
+	}
+
+	public void stop() {
+		_stream._reading = false;
+		_buffer.flushBuffer();
 	}
 }

@@ -18,6 +18,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JScrollPane;
 import javax.swing.KeyStroke;
+import javax.swing.ToolTipManager;
 
 import listener.IBackendListener;
 import parser.objects.RelOptInfo;
@@ -43,6 +44,8 @@ public class Visualisation extends JFrame implements IBackendListener {
 	 */
 	public Visualisation(final Dimension size) {
 		super("PostgreSQL Join-Plan Visualizer");
+		ToolTipManager.sharedInstance().setInitialDelay(0);
+		ToolTipManager.sharedInstance().setDismissDelay(Integer.MAX_VALUE);
 		setSize(size);
 		setLayout(new BorderLayout());
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -106,6 +109,17 @@ public class Visualisation extends JFrame implements IBackendListener {
 			}
 		});
 		menu.add(item);
+		item = new JMenuItem("Stop Parsing", KeyEvent.VK_S);
+		item.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S,
+				ActionEvent.ALT_MASK));
+		item.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(final ActionEvent arg0) {
+				_parser.stop();
+			}
+		});
+		menu.add(item);
 		menuBar.add(menu);
 		menu.add(item);
 		menuBar.add(menu);
@@ -121,6 +135,7 @@ public class Visualisation extends JFrame implements IBackendListener {
 		final Visualisation v = new Visualisation(new Dimension(800, 500));
 		v.setVisible(true);
 		// v._logger.ignoreAll();
+		// v._logger.ignore(LogMessageType.PARSER_IN);
 		v.read(new File("C:\\Users\\Daniel\\Desktop\\_dummy"));
 	}
 }

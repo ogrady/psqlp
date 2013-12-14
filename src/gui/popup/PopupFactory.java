@@ -6,14 +6,17 @@ import gui.tree.TreeFactory;
 import gui.tree.TreePopup;
 
 import java.awt.Dimension;
-import java.awt.Frame;
+import java.awt.Window;
+import java.util.List;
 
 import parser.objects.Path;
 import parser.objects.RelOptInfo;
 import structure.Tree;
 
 /**
- * Generates a tree-popup from several elements.
+ * Generates a tree-popup from several elements.<br>
+ * TODO Some of those are probably never used should be pruned upon final
+ * cleanup
  * 
  * @author Daniel
  * 
@@ -31,7 +34,7 @@ public class PopupFactory {
 	 *            overview to create the popup from
 	 * @return invisible popup
 	 */
-	public static TreePopup<Path> create(final Frame owner,
+	public static TreePopup<Path> create(final Window owner,
 			final Overview overview) {
 		final TreePopup<Path> popup = new TreePopup<Path>(owner,
 				overview.getName(), SIZE);
@@ -56,11 +59,34 @@ public class PopupFactory {
 	 *            display to create the popup from
 	 * @return invisible popup
 	 */
-	public static TreePopup<Path> create(final Frame owner,
+	public static TreePopup<Path> create(final Window owner,
 			final LevelDisplay display) {
 		final TreePopup<Path> popup = new TreePopup<Path>(owner,
 				display.getName(), SIZE);
 		for (final RelOptInfo reloptinfo : display._reloptinfos) {
+			for (final Path path : reloptinfo._pathlist) {
+				popup._trees.addTree(TreeFactory.treeify(path),
+						path._strategy.toString() + path._ids.toString());
+			}
+		}
+		return popup;
+	}
+
+	/**
+	 * Creates a popup from a list of relopts. This will display ALL paths from
+	 * ALL reloptinfos within the list!
+	 * 
+	 * @param owner
+	 *            owning window
+	 * @param list
+	 *            arbitrary list of reloptinfos to display the popup from
+	 * @return invisible popup
+	 */
+	public static TreePopup<Path> create(final Window owner,
+			final List<RelOptInfo> list) {
+		final TreePopup<Path> popup = new TreePopup<Path>(owner, ""
+				+ list.size(), SIZE);
+		for (final RelOptInfo reloptinfo : list) {
 			for (final Path path : reloptinfo._pathlist) {
 				popup._trees.addTree(TreeFactory.treeify(path),
 						path._strategy.toString() + path._ids.toString());
@@ -81,7 +107,7 @@ public class PopupFactory {
 	 *            the reloptinfo to create the popup from
 	 * @return invisible popup
 	 */
-	public static TreePopup<Path> create(final Frame owner,
+	public static TreePopup<Path> create(final Window owner,
 			final RelOptInfo reloptinfo) {
 		final TreePopup<Path> popup = new TreePopup<Path>(owner, ""
 				+ reloptinfo._ids.size(), SIZE);

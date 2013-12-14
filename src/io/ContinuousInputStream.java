@@ -7,7 +7,7 @@ import java.io.FileReader;
 import java.io.IOException;
 
 public class ContinuousInputStream {
-	private volatile boolean _reading;
+	public volatile boolean _reading;
 	private BufferedReader _in;
 
 	/**
@@ -67,7 +67,6 @@ public class ContinuousInputStream {
 					synchronized (line) {
 						destination.receive(line);
 					}
-
 				}
 			}
 		} catch (final FileNotFoundException e) {

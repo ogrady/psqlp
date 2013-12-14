@@ -11,7 +11,7 @@ import structure.TreeNode;
  * @author Daniel
  * 
  */
-public class VisualNode extends JButton {
+public class VisualTreeNode extends JButton {
 	private static final long serialVersionUID = 1L;
 	private final TreeNode<?> _node;
 
@@ -28,9 +28,9 @@ public class VisualNode extends JButton {
 	 * @param node
 	 *            the node to represent
 	 */
-	public VisualNode(final TreeNode<?> node) {
-		super(node.toString());
-		setToolTipText(node.toString());
+	public VisualTreeNode(final TreeNode<?> node) {
+		super(node.getLabelText());
+		setToolTipText(node.getToolTipText());
 		_node = node;
 		node.setRepresentation(this);
 	}

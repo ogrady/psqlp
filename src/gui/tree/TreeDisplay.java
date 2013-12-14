@@ -1,16 +1,21 @@
 package gui.tree;
 
+import gui.popup.PopupFactory;
+
 import java.awt.Color;
+import java.awt.Dialog.ModalityType;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Window;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import parser.objects.Path;
+import structure.Backend;
 import structure.Tree;
 import structure.TreeNode;
 
@@ -19,10 +24,8 @@ public class TreeDisplay<T> extends JPanel {
 	private static final int MARGIN = 50;
 	private static final int WIDTH = 100;
 	private static final int HEIGHT = 25;
-	private final List<VisualNode> _visualNodes;
+	private final List<VisualTreeNode> _visualNodes;
 	private Tree<T> _tree;
-
-	// private final JFrame _parent;
 
 	/**
 	 * Constructor
@@ -30,10 +33,9 @@ public class TreeDisplay<T> extends JPanel {
 	 * @param size
 	 *            initial size for the Display
 	 */
-	public TreeDisplay(final JFrame parent, final Dimension size) {
+	public TreeDisplay(final Dimension size) {
 		setSize(size);
-		// _parent = parent;
-		_visualNodes = new ArrayList<VisualNode>();
+		_visualNodes = new ArrayList<VisualTreeNode>();
 		setBackground(Color.WHITE);
 		setLayout(null);
 		addMouseListener(new MouseAdapter() {
@@ -120,13 +122,21 @@ public class TreeDisplay<T> extends JPanel {
 		if (rightChild != null) {
 			createSubTree(rightChild, middle, right);
 		}
-		final VisualNode node = new VisualNode(root);
-		/*node.addMouseListener(new MouseAdapter() {
+		final VisualTreeNode node = new VisualTreeNode(root);
+		// TODO popup
+		node.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(final MouseEvent me) {
-				new Popup(Display.this._parent).setVisible(true);
+				// new Popup(Display.this._parent).setVisible(true);
+				// TODO popup
+				final int level = ((Path) node.getNode()._element)._ids.size();
+				final TreePopup<Path> popup = PopupFactory.create(
+						(Window) TreeDisplay.this.getTopLevelAncestor(),
+						Backend._reloptinfos.get(level));
+				popup.setModalityType(ModalityType.APPLICATION_MODAL);
+				popup.setVisible(true);
 			}
-		});*/
+		});
 		_visualNodes.add(node);
 		node.setBounds(middle, (root.getHeight() + 1) * MARGIN, WIDTH, HEIGHT);
 		add(node);
@@ -138,10 +148,10 @@ public class TreeDisplay<T> extends JPanel {
 	@Override
 	public void paint(final Graphics g) {
 		super.paint(g);
-		for (final VisualNode node : _visualNodes) {
+		for (final VisualTreeNode node : _visualNodes) {
 			final TreeNode<?> parent = node.getNode().getParent();
 			if (parent != null) {
-				final VisualNode parentRepresentation = parent
+				final VisualTreeNode parentRepresentation = parent
 						.getRepresentation();
 				if (parentRepresentation != null) {
 					g.drawLine(

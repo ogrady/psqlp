@@ -1,7 +1,7 @@
 package gui;
 
 import gui.popup.Popup;
-import gui.tree.VisualNode;
+import gui.tree.VisualTreeNode;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -34,7 +34,7 @@ abstract public class Display extends JPanel {
 	private static final int MARGIN = 50;
 	private static final int WIDTH = 100;
 	private static final int HEIGHT = 30;
-	private final List<VisualNode> _visualNodes;
+	private final List<VisualTreeNode> _visualNodes;
 	private Tree<?> _tree;
 	private final JFrame _parent;
 
@@ -47,7 +47,7 @@ abstract public class Display extends JPanel {
 	public Display(final JFrame parent, final Dimension size) {
 		setSize(size);
 		_parent = parent;
-		_visualNodes = new ArrayList<VisualNode>();
+		_visualNodes = new ArrayList<VisualTreeNode>();
 		setBackground(Color.WHITE);
 		// setLayout(null);
 	}
@@ -111,7 +111,7 @@ abstract public class Display extends JPanel {
 		if (rightChild != null) {
 			createSubTree(rightChild, middle, right);
 		}
-		final VisualNode node = new VisualNode(root);
+		final VisualTreeNode node = new VisualTreeNode(root);
 		node.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(final MouseEvent me) {
@@ -129,10 +129,10 @@ abstract public class Display extends JPanel {
 	@Override
 	public void paint(final Graphics g) {
 		super.paint(g);
-		for (final VisualNode node : _visualNodes) {
+		for (final VisualTreeNode node : _visualNodes) {
 			final TreeNode<?> parent = node.getNode().getParent();
 			if (parent != null) {
-				final VisualNode parentRepresentation = parent
+				final VisualTreeNode parentRepresentation = parent
 						.getRepresentation();
 				if (parentRepresentation != null) {
 					g.drawLine(

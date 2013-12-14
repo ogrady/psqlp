@@ -2,14 +2,13 @@ package gui.tree;
 
 import parser.objects.Path;
 import structure.Tree;
-import structure.TreeNode;
 
 public class TreeFactory {
 	public static Tree<Path> treeify(final Path path) {
 		return new Tree<Path>(nodify(path));
 	}
 
-	private static TreeNode<Path> nodify(final Path path) {
+	private static PathTreeNode nodify(final Path path) {
 		final PathTreeNode node = new PathTreeNode(path);
 		if (path != null && path._join != null) {
 			if (path._join._outerJoinPath != null) {

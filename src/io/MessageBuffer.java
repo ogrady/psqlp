@@ -54,8 +54,7 @@ public class MessageBuffer implements IInputReceiver {
 			// -> the block has ended and a new block has started
 			// -> pass the old block and clear the buffer
 			else if (getIndent(rawLine) == _indent) {
-				_receiver.receive(_buffer);
-				_buffer.clear();
+				flushBuffer();
 			}
 			if (relevant(rawLine)) {
 				_buffer.add(preprocess(rawLine));
@@ -92,6 +91,11 @@ public class MessageBuffer implements IInputReceiver {
 			trimmed = "\t" + trimmed;
 		}
 		return trimmed;
+	}
+
+	public void flushBuffer() {
+		_receiver.receive(_buffer);
+		_buffer.clear();
 	}
 
 	/**

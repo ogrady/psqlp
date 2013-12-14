@@ -58,11 +58,13 @@ public class RelOptInfoParser extends Parser<RelOptInfo> {
 		linebreak(input);
 		String baserestrictinfo = null, joininfo = null;
 		removeIndent(input, indent);
-		if (lookahead(input, "\tbaserestrictinfo: ")) {
+		// trailing whitespace from grammar dismissed due to trimming
+		if (lookahead(input, "\tbaserestrictinfo:")) {
 			baserestrictinfo = parseBaseRestrictinfo(input, indent);
 			removeIndent(input, indent);
 		}
-		if (lookahead(input, "\tjoininfo: ")) {
+		// trailing whitespace from grammar dismissed due to trimming
+		if (lookahead(input, "\tjoininfo:")) {
 			joininfo = parseJoinInfo(input, indent);
 			removeIndent(input, indent);
 		}
@@ -148,7 +150,7 @@ public class RelOptInfoParser extends Parser<RelOptInfo> {
 	public String parseJoinInfo(final StringBuilder input, final int indent)
 			throws ParseException {
 		logIn("joininfo", input);
-		truncate(input, "\tjoininfo: ");
+		truncate(input, "\tjoininfo:");
 		final String info = consume(input);
 		linebreak(input);
 		logOut(info);
@@ -158,7 +160,7 @@ public class RelOptInfoParser extends Parser<RelOptInfo> {
 	public String parseClauses(final StringBuilder input, final int indent)
 			throws ParseException {
 		logIn("clauses", input);
-		truncate(input, " clauses: ");
+		truncate(input, " clauses:");
 		final String info = consume(input);
 		linebreak(input);
 		logOut(info);
@@ -168,7 +170,7 @@ public class RelOptInfoParser extends Parser<RelOptInfo> {
 	public String parseBaseRestrictinfo(final StringBuilder input,
 			final int indent) throws ParseException {
 		logIn("baserestrictinfo", input);
-		truncate(input, "\tbaserestrictinfo: ");
+		truncate(input, "\tbaserestrictinfo:");
 		final String info = consume(input);
 		linebreak(input);
 		logOut(info);
@@ -227,6 +229,7 @@ public class RelOptInfoParser extends Parser<RelOptInfo> {
 					internalString));
 		}
 		truncate(input, AccessStrategy.values()[i].name());
+		logOut(AccessStrategy.values()[i]);
 		return AccessStrategy.values()[i];
 	}
 
@@ -247,15 +250,15 @@ public class RelOptInfoParser extends Parser<RelOptInfo> {
 		final Cost cost = parseCost(input, indent);
 		linebreak(input);
 		String pathkeys = null;
-		// removeIndent(input, indent);
 		// note: normally there would be two leading whitespaces instead of two
 		// tabs. But since we replaced all leading whitespaces with tabs to
 		// unify the indent we have to improvise here
+		// trailing whitespace from grammar dismissed due to trimming
 		final String in = generateIndentAsTabs(indent);
 		if (lookahead(input, in + "\t\tpathkeys:")) {
 			truncate(input, in);
 			logIn("pathkeys", input);
-			truncate(input, "\t\tpathkeys: ");
+			truncate(input, "\t\tpathkeys:");
 			pathkeys = consume(input);
 			logOut(pathkeys);
 			linebreak(input);
@@ -263,7 +266,8 @@ public class RelOptInfoParser extends Parser<RelOptInfo> {
 			logFail("pathkeys");
 		}
 		Join join = null;
-		if (lookahead(input, in + "\t\tclauses: ")) {
+		// trailing whitespace from grammar dismissed due to trimming
+		if (lookahead(input, in + "\t\tclauses:")) {
 			truncate(input, in);
 			join = parseJoin(input, indent);
 		} else {
@@ -291,7 +295,7 @@ public class RelOptInfoParser extends Parser<RelOptInfo> {
 	public Join parseJoin(final StringBuilder input, final int indent)
 			throws ParseException {
 		logIn("join", input);
-		truncate(input, "\t\tclauses: ");
+		truncate(input, "\t\tclauses:");
 		final String clauses = consume(input);
 		linebreak(input);
 		removeIndent(input, indent);

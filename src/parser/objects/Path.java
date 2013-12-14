@@ -1,5 +1,7 @@
 package parser.objects;
 
+import gui.tree.ITreeable;
+
 import java.util.List;
 
 /**
@@ -11,7 +13,7 @@ import java.util.List;
  * @author Daniel
  * 
  */
-public class Path {
+public class Path implements ITreeable {
 	public final List<Integer> _ids;
 	public final AccessStrategy _strategy;
 	public final int _rows;
@@ -74,5 +76,15 @@ public class Path {
 				.format("Path[\r\n id: %s \r\n astrat: %s \r\n rows: %d \r\n cost: %s\r\n pathkeys: %s \r\n clauses: %s \r\n subpath: %s \r\n]",
 						_ids, _strategy, _rows, _cost, _pathkeys, _join,
 						_subpath);
+	}
+
+	@Override
+	public String getLabelText() {
+		return _strategy + _ids.toString();
+	}
+
+	@Override
+	public String getToolTipText() {
+		return toString();
 	}
 }

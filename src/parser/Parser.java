@@ -72,6 +72,7 @@ public abstract class Parser<P> implements IParser<List<String>, P> {
 	 * @return true, if the input starts off with the expected prefix
 	 */
 	protected boolean lookahead(final StringBuilder input, final String expected) {
+		// return input.toString().matches("^" + expected + ".*");
 		return input.toString().matches("^" + expected + ".*");
 	}
 

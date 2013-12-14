@@ -70,22 +70,13 @@ public class LevelDisplay extends JComponent {
 		bu.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(final MouseEvent me) {
-				/*	final TreePopup<Path> popup = new TreePopup<Path>(
-							(JFrame) SwingUtilities.getRoot(LevelDisplay.this), ""
-									+ _level, new Dimension(400, 400));
-					for (final Path p : relopt._pathlist) {
-						final Tree<Path> tree = TreeFactory.treeify(p);
-						popup._trees.addTree(tree,
-								tree._root._element._strategy.toString());
-					}
-					*/
 				PopupFactory.create(
 						(JFrame) SwingUtilities.getRoot(LevelDisplay.this),
 						reloptinfo).setVisible(true);
 
 			}
 		});
-		bu.setToolTipText(reloptinfo._ids.toString());
+		// bu.setToolTipText(reloptinfo._cheapestTotal.getToolTipText());
 		add(bu);
 	}
 

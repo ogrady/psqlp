@@ -68,25 +68,6 @@ public class Overview extends JComponent {
 	public void addRelOptInfo(final RelOptInfo relopt, final int level) {
 		addLevelDisplay(level);
 		final LevelDisplay display = _levels.get(level);
-		/*final JButton bu = new JButton(relopt._ids.toString());
-		bu.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(final MouseEvent me) {
-				final TreePopup<Path> popup = new TreePopup<Path>(
-						(JFrame) SwingUtilities.getRoot(Overview.this), ""
-								+ Overview.this._maxLevel, new Dimension(400,
-								400));
-				for (final Path p : relopt._pathlist) {
-					final Tree<Path> tree = TreeFactory.treeify(p);
-					popup._trees.addTree(tree,
-							tree._root._element._strategy.toString());
-				}
-				popup.setVisible(true);
-
-			}
-		});
-		bu.setToolTipText("sadfsdfsdf");
-		display.add(bu);*/
 		display.addRelOptInfo(relopt);
 		revalidate();
 	}
