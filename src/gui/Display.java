@@ -1,6 +1,6 @@
 package gui;
 
-import gui.renderer.Popup;
+import gui.popup.Popup;
 import gui.tree.VisualNode;
 
 import java.awt.Color;
@@ -28,10 +28,11 @@ import structure.TreeNode;
  * @author Daniel
  * 
  */
-public class Display extends JPanel {
+@Deprecated
+abstract public class Display extends JPanel {
 	private static final long serialVersionUID = 1L;
 	private static final int MARGIN = 50;
-	private static final int WIDTH = 60;
+	private static final int WIDTH = 100;
 	private static final int HEIGHT = 30;
 	private final List<VisualNode> _visualNodes;
 	private Tree<?> _tree;

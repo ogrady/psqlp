@@ -1,38 +1,27 @@
 package gui.tree;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.Frame;
 
 import javax.swing.JDialog;
 
-import structure.Tree;
-import structure.TreeNode;
-
+/**
+ * Popup that holds a set of trees in tabs.
+ * 
+ * @author Daniel
+ * 
+ * @param <T>
+ */
 public class TreePopup<T> extends JDialog {
 	private static final long serialVersionUID = 1L;
 	public final MultiTreeDisplay<T> _trees;
 
-	public TreePopup(final Frame owner, final String title) {
+	public TreePopup(final Frame owner, final String title, final Dimension size) {
 		super(owner, title, true);
+		setSize(size);
 		setLayout(new BorderLayout());
 		_trees = new MultiTreeDisplay<T>();
 		add(_trees, BorderLayout.CENTER);
-		pack();
 	}
-
-	public static void main(final String[] args) {
-		final TreePopup<Integer> popup = new TreePopup<Integer>(null,
-				"test from treepopupclass");
-		popup.setVisible(true);
-		Tree<Integer> tree = new Tree<Integer>(new TreeNode<Integer>(5));
-		tree._root.setLeftChild(new TreeNode<Integer>(34));
-		popup._trees.addTree(tree, "" + tree._root._element);
-		tree = new Tree<Integer>(new TreeNode<Integer>(500));
-		tree._root.setLeftChild(new TreeNode<Integer>(1));
-		tree._root.setRightChild(new TreeNode<Integer>(1000));
-		tree._root.getLeftChild().setRightChild(new TreeNode<Integer>(600));
-		popup._trees.addTree(tree, "" + tree._root._element);
-		popup.pack();
-	}
-
 }

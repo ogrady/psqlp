@@ -1,6 +1,6 @@
 package structure;
 
-import gui.renderer.IRenderable;
+import gui.popup.IRenderable;
 import gui.tree.VisualNode;
 
 /**

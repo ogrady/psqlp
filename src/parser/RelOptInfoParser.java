@@ -7,11 +7,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import parser.objects.AccessStrategy;
 import parser.objects.Cost;
 import parser.objects.Join;
 import parser.objects.Path;
 import parser.objects.RelOptInfo;
-import parser.objects.plan.AccessStrategy;
 import exception.ParseException;
 
 public class RelOptInfoParser extends Parser<RelOptInfo> {
@@ -193,29 +193,6 @@ public class RelOptInfoParser extends Parser<RelOptInfo> {
 		return parsePath(input, indent);
 	}
 
-	/*public PathList parsePathList(final StringBuilder input, final int indent)
-			throws ParseException {
-		log("pathlist", input);
-		final ArrayList<Path> paths = new ArrayList<Path>();
-		truncate(input, "\tpath list:");
-		linebreak(input);
-		try {
-			while (true) {
-				paths.add(parsePath(input, indent));
-			}
-		} catch (final ParseException e) {
-			e.printStackTrace();
-			// this feels dirty...
-		}
-		Path cheapestStartup = null, cheapestTotal = null;
-		if (lookahead(input, "\tcheapest startup path:")) {
-			cheapestStartup = parseCheapestStartupPath(input, indent);
-		}
-		if (lookahead(input, "\tcheapest total path:")) {
-			cheapestTotal = parseCheapestTotalPath(input, indent);
-		}
-		return new PathList(paths, cheapestStartup, cheapestTotal);
-	}*/
 	public List<Path> parsePathList(final StringBuilder input, final int indent)
 			throws ParseException {
 		logIn("pathlist", input);
@@ -270,14 +247,13 @@ public class RelOptInfoParser extends Parser<RelOptInfo> {
 		final Cost cost = parseCost(input, indent);
 		linebreak(input);
 		String pathkeys = null;
-		/*System.out.println(input);
-		System.out.println(indent);*/
-		// pause();
-		removeIndent(input, indent);
+		// removeIndent(input, indent);
 		// note: normally there would be two leading whitespaces instead of two
 		// tabs. But since we replaced all leading whitespaces with tabs to
 		// unify the indent we have to improvise here
-		if (lookahead(input, "\t\tpathkeys:")) {
+		final String in = generateIndentAsTabs(indent);
+		if (lookahead(input, in + "\t\tpathkeys:")) {
+			truncate(input, in);
 			logIn("pathkeys", input);
 			truncate(input, "\t\tpathkeys: ");
 			pathkeys = consume(input);
@@ -287,7 +263,8 @@ public class RelOptInfoParser extends Parser<RelOptInfo> {
 			logFail("pathkeys");
 		}
 		Join join = null;
-		if (lookahead(input, "\t\tclauses: ")) {
+		if (lookahead(input, in + "\t\tclauses: ")) {
+			truncate(input, in);
 			join = parseJoin(input, indent);
 		} else {
 			logFail("join");
@@ -298,9 +275,6 @@ public class RelOptInfoParser extends Parser<RelOptInfo> {
 			subpath = parsePath(input, indent + 1);
 		} catch (final ParseException pe) {
 			logFail("path");
-		}
-		if (pathkeys == null && join == null && subpath == null) {
-			resetIndent(input, indent);
 		}
 		return new Path(ids, strat, rows, cost, pathkeys, join, subpath);
 	}
@@ -360,11 +334,18 @@ public class RelOptInfoParser extends Parser<RelOptInfo> {
 		truncate(input, prefix);
 	}
 
+	public String generateIndentAsTabs(final int indent) {
+		String prefix = "";
+		for (int i = 0; i < indent; i++) {
+			prefix += "\t";
+		}
+		return prefix;
+	}
+
 	public static void pause() {
 		try {
 			System.in.read();
 		} catch (final IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

@@ -169,13 +169,7 @@ public abstract class Parser<P> implements IParser<List<String>, P> {
 	 *            stringbuilder to trim
 	 */
 	protected void trimFront(final StringBuilder sb) {
-		int whitespaces = 0;
-		final Matcher matcher = WHITESPACE_PATTERN.matcher(sb.toString());
-		if (matcher.find()) {
-			whitespaces = matcher.group().length();
-		}
-		// TODO use getIndent
-		sb.delete(0, whitespaces);
+		sb.delete(0, getIndent(sb));
 	}
 
 	protected int getIndent(final StringBuilder sb) {

@@ -2,8 +2,6 @@ package parser.objects;
 
 import java.util.List;
 
-import parser.objects.plan.AccessStrategy;
-
 /**
  * A Path specifies the access to a relation. That relation might either be
  * scalar in terms of a physical relation within the DB-system or an artificial

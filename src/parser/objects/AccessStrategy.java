@@ -1,4 +1,4 @@
-package parser.objects.plan;
+package parser.objects;
 
 /**
  * Access strategies PostgreSQL uses to access or unite relations. Taken from <a

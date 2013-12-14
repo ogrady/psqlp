@@ -30,6 +30,7 @@ public class VisualNode extends JButton {
 	 */
 	public VisualNode(final TreeNode<?> node) {
 		super(node.toString());
+		setToolTipText(node.toString());
 		_node = node;
 		node.setRepresentation(this);
 	}

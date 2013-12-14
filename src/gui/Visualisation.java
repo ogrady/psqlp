@@ -101,7 +101,6 @@ public class Visualisation extends JFrame implements IBackendListener {
 				final JFileChooser chooser = new JFileChooser();
 				final int chosen = chooser.showOpenDialog(Visualisation.this);
 				if (chosen == JFileChooser.APPROVE_OPTION) {
-					// _parser.read(chooser.getSelectedFile());
 					read(chooser.getSelectedFile());
 				}
 			}

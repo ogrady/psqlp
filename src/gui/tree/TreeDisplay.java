@@ -17,8 +17,8 @@ import structure.TreeNode;
 public class TreeDisplay<T> extends JPanel {
 	private static final long serialVersionUID = 1L;
 	private static final int MARGIN = 50;
-	private static final int WIDTH = 60;
-	private static final int HEIGHT = 30;
+	private static final int WIDTH = 100;
+	private static final int HEIGHT = 25;
 	private final List<VisualNode> _visualNodes;
 	private Tree<T> _tree;
 

@@ -1,4 +1,4 @@
-package gui.renderer;
+package gui.popup;
 
 import java.awt.Frame;
 
