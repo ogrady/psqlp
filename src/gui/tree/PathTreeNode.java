@@ -12,7 +12,10 @@ public class PathTreeNode extends TreeNode<Path> {
 		_tooltip += createToolTipElement("ids", _element._ids.toString());
 		_tooltip += createToolTipElement("strategy",
 				_element._strategy.toString());
-		_tooltip += createToolTipElement("cost", _element._cost.toString());
+		_tooltip += createToolTipElement("startup cost", ""
+				+ _element._cost._startup);
+		_tooltip += createToolTipElement("total cost", ""
+				+ _element._cost._total);
 		_tooltip += "<html>";
 	}
 

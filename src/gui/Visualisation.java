@@ -100,7 +100,7 @@ public class Visualisation extends JFrame implements IBackendListener {
 		item.addActionListener(new ActionListener() {
 
 			@Override
-			public void actionPerformed(final ActionEvent arg0) {
+			public void actionPerformed(final ActionEvent ae) {
 				final JFileChooser chooser = new JFileChooser();
 				final int chosen = chooser.showOpenDialog(Visualisation.this);
 				if (chosen == JFileChooser.APPROVE_OPTION) {
@@ -115,8 +115,24 @@ public class Visualisation extends JFrame implements IBackendListener {
 		item.addActionListener(new ActionListener() {
 
 			@Override
-			public void actionPerformed(final ActionEvent arg0) {
+			public void actionPerformed(final ActionEvent ae) {
 				_parser.stop();
+			}
+		});
+		menu.add(item);
+		item = new JMenuItem("Clear", KeyEvent.VK_C);
+		item.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C,
+				ActionEvent.ALT_MASK));
+		item.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(final ActionEvent ae) {
+				try {
+					_parser.stop();
+				} catch (final Exception e) {
+					e.printStackTrace();
+				}
+				_overview.clear();
 			}
 		});
 		menu.add(item);

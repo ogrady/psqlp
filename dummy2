@@ -1,4 +1,4 @@
-        RELOPTINFO (1): rows=60175 width=21                
+DEBUG:        RELOPTINFO (1): rows=60175 width=21                
         	path list:
         	IdxScan(1) rows=60175 cost=0.29..0.72
         	  pathkeys: ((l.l_orderkey, o.o_orderkey))        

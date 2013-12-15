@@ -71,4 +71,15 @@ public class Overview extends JComponent {
 		display.addRelOptInfo(relopt);
 		revalidate();
 	}
+
+	/**
+	 * Clears the overview to parse a new log
+	 */
+	public void clear() {
+		_levels.clear();
+		_maxLevel = 0;
+		removeAll();
+		invalidate();
+		repaint();
+	}
 }

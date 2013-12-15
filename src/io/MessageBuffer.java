@@ -20,6 +20,13 @@ public class MessageBuffer implements IInputReceiver {
 	private int _indent;
 
 	/**
+	 * @return whether buffer is currently empty
+	 */
+	public boolean isEmpty() {
+		return _buffer.isEmpty();
+	}
+
+	/**
 	 * Constructor
 	 * 
 	 * @param messageParser
@@ -85,12 +92,14 @@ public class MessageBuffer implements IInputReceiver {
 	 * @return preprocessed line
 	 */
 	public String preprocess(final String line) {
-		String trimmed = line.trim();
-		final int indent = getIndent(line);
+		String altered = line;
+		altered = altered.replaceAll("\\^DEBUG:", "");
+		final int indent = getIndent(altered);
+		altered = altered.trim();
 		for (int i = 0; i < indent; i++) {
-			trimmed = "\t" + trimmed;
+			altered = "\t" + altered;
 		}
-		return trimmed;
+		return altered;
 	}
 
 	public void flushBuffer() {
@@ -112,6 +121,8 @@ public class MessageBuffer implements IInputReceiver {
 		// with DEBUG:. The latter because as seen in
 		// the source those are not part of the printout and therefore have
 		// other sources we are not interested in
-		return !(trimmed.equals("") || trimmed.startsWith("DEBUG:"));
+		return !trimmed.equals("")
+		// durr
+				&& !trimmed.startsWith("DEBUG:  clause_selectivity");
 	}
 }

@@ -41,6 +41,8 @@ public class FileParser {
 
 	public void stop() {
 		_stream._reading = false;
-		_buffer.flushBuffer();
+		if (!_buffer.isEmpty()) {
+			_buffer.flushBuffer();
+		}
 	}
 }
