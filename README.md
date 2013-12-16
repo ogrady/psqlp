@@ -6,11 +6,11 @@ Parser for PostgreSQL debug output to visualize the join trees
 Howto
 ====
 Assuming your Postgres is compiled with 
-	`./configure CPPFLAGS="-DOPTIMIZE_DEBUG -DSELECTIVITY_DEBUG`
+	`./configure CPPFLAGS="-DOPTIMIZER_DEBUG -DSELECTIVITY_DEBUG`
 and already running.
 
-1. Export the project with the configuration from test/GuiStartup.java
-2. Run the jar (the application generates some log itself. You can redirect it to a file in UNIX-fashion if you like with java -jar pgsqlv.jar > mylogfile)
+1. Export the project with the configuration from `test/GuiStartup.java`
+2. Run the jar (the application generates some log itself. You can redirect it to a file in UNIX-fashion if you like with `java -jar pgsqlv.jar > mylogfile`)
 3. Select a logfile via `File > Load` 
 4. Run your query in Postgres
 5. The GUI should now fill itself with data. Stop the parser via `File > Stop Parsing` to empty the buffer
