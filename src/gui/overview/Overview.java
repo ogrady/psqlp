@@ -47,7 +47,7 @@ public class Overview extends JComponent {
 			for (int i = _maxLevel + 1; i <= level; i++) {
 				final LevelDisplay newLevel = new LevelDisplay(i);
 				_levels.put(level, newLevel);
-				add(newLevel);
+				add(newLevel, 0);
 			}
 			_maxLevel = level;
 		} else {
