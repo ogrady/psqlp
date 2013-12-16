@@ -4,7 +4,6 @@ import io.IMessageReceiver;
 import io.logger.LogMessageType;
 import io.logger.Logger;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,7 +27,7 @@ public class Backend implements IMessageReceiver, IListenable<IBackendListener> 
 	// isn't a singleton we have no guarantee for this (though it is only
 	// instantiated once in this very project!).
 	// May Dennis Ritchie have mercy on my soul.
-	public static final Map<Integer, ArrayList<RelOptInfo>> _reloptinfos = new HashMap<Integer, ArrayList<RelOptInfo>>();
+	public static final Map<Integer, HashMap<String, RelOptInfo>> _reloptinfos = new HashMap<Integer, HashMap<String, RelOptInfo>>();
 
 	public Backend(final Logger logger) {
 		_logger = logger;
@@ -56,15 +55,15 @@ public class Backend implements IMessageReceiver, IListenable<IBackendListener> 
 
 	private void addRelOptInfo(final RelOptInfo reloptinfo) {
 		final int level = reloptinfo._ids.size();
-		ArrayList<RelOptInfo> list = _reloptinfos.get(level);
+		HashMap<String, RelOptInfo> list = _reloptinfos.get(level);
 
 		if (list == null) {
-			final ArrayList<RelOptInfo> newList = new ArrayList<RelOptInfo>();
+			final HashMap<String, RelOptInfo> newList = new HashMap<String, RelOptInfo>();
 			_reloptinfos.put(level, newList);
 			list = newList;
 		}
 		assert list != null;
-		list.add(reloptinfo);
+		list.put(reloptinfo._ids.toString(), reloptinfo);
 	}
 
 	@Override

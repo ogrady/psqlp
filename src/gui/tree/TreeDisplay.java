@@ -127,12 +127,12 @@ public class TreeDisplay<T> extends JPanel {
 		node.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(final MouseEvent me) {
-				// new Popup(Display.this._parent).setVisible(true);
-				// TODO popup
-				final int level = ((Path) node.getNode()._element)._ids.size();
+				final Path path = (Path) node.getNode()._element;
+				final int level = path._ids.size();
+				final String key = path._ids.toString();
 				final TreePopup<Path> popup = PopupFactory.create(
 						(Window) TreeDisplay.this.getTopLevelAncestor(),
-						Backend._reloptinfos.get(level));
+						Backend._reloptinfos.get(level).get(key));
 				popup.setModalityType(ModalityType.APPLICATION_MODAL);
 				popup.setVisible(true);
 			}

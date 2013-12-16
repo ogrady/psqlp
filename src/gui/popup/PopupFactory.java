@@ -7,7 +7,7 @@ import gui.tree.TreePopup;
 
 import java.awt.Dimension;
 import java.awt.Window;
-import java.util.List;
+import java.util.Collection;
 
 import parser.objects.Path;
 import parser.objects.RelOptInfo;
@@ -83,7 +83,7 @@ public class PopupFactory {
 	 * @return invisible popup
 	 */
 	public static TreePopup<Path> create(final Window owner,
-			final List<RelOptInfo> list) {
+			final Collection<RelOptInfo> list) {
 		final TreePopup<Path> popup = new TreePopup<Path>(owner, ""
 				+ list.size(), SIZE);
 		for (final RelOptInfo reloptinfo : list) {
