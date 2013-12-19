@@ -30,7 +30,7 @@ public class FileParser {
 			public void run() {
 				try {
 					// TODO change to true
-					_stream.read(file, _buffer, false);
+					_stream.read(file, _buffer, true);
 				} catch (final IOException e) {
 					e.printStackTrace();
 				}
