@@ -22,7 +22,7 @@ import structure.Tree;
  * 
  */
 public class PopupFactory {
-	private static final Dimension SIZE = new Dimension(400, 400);
+	private static final Dimension SIZE = new Dimension(700, 300);
 
 	/**
 	 * Creates a popup from an {@link Overview}. This will display ALL paths
@@ -109,7 +109,7 @@ public class PopupFactory {
 	 */
 	public static TreePopup<Path> create(final Window owner,
 			final RelOptInfo reloptinfo) {
-		final TreePopup<Path> popup = new TreePopup<Path>(owner, ""
+		final TreePopup<Path> popup = new TreePopup<Path>(owner, "Level "
 				+ reloptinfo._ids.size(), SIZE);
 		for (final Path p : reloptinfo._pathlist) {
 			final Tree<Path> tree = TreeFactory.treeify(p);

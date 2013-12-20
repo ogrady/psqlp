@@ -29,7 +29,6 @@ public class FileParser {
 			@Override
 			public void run() {
 				try {
-					// TODO change to true
 					_stream.read(file, _buffer, jumpToEnd);
 				} catch (final IOException e) {
 					e.printStackTrace();

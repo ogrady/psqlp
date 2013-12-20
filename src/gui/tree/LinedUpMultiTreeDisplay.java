@@ -11,6 +11,8 @@ public class LinedUpMultiTreeDisplay<T> extends TabbedMultiTreeDisplay<T> {
 
 	public LinedUpMultiTreeDisplay() {
 		setLayout(new GridLayout());
+		// removes the tabbed pane. TODO Change inheritance line to avoid this
+		removeAll();
 	}
 
 	@Override
