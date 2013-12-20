@@ -16,6 +16,14 @@ public class PathTreeNode extends TreeNode<Path> {
 				+ _element._cost._startup);
 		_tooltip += createToolTipElement("total cost", ""
 				+ _element._cost._total);
+		if (_element._pathkeys != null && !_element._pathkeys.trim().equals("")) {
+			_tooltip += createToolTipElement("path keys", _element._pathkeys);
+		}
+		if (_element._join != null && _element._join._restrictClauses != null
+				&& !_element._join._restrictClauses.trim().equals("")) {
+			_tooltip += createToolTipElement("join restrictions",
+					_element._join._restrictClauses);
+		}
 		_tooltip += "<html>";
 	}
 

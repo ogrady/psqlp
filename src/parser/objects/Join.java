@@ -15,4 +15,10 @@ public class Join {
 		_outerJoinPath = outerJoinPath;
 		_innerJoinPath = innerJoinPath;
 	}
+
+	@Override
+	public String toString() {
+		return String.format("{inner: %s\r\n outer: %s\r\n restrict: %s\r\n}",
+				_innerJoinPath, _outerJoinPath, _restrictClauses);
+	}
 }

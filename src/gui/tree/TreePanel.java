@@ -7,6 +7,8 @@ import java.awt.Dialog.ModalityType;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Window;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -19,7 +21,7 @@ import structure.Backend;
 import structure.Tree;
 import structure.TreeNode;
 
-public class TreeDisplay<T> extends JPanel {
+public class TreePanel<T> extends JPanel implements ComponentListener {
 	private static final long serialVersionUID = 1L;
 	private static final int MARGIN = 50;
 	private static final int WIDTH = 100;
@@ -33,7 +35,7 @@ public class TreeDisplay<T> extends JPanel {
 	 * @param size
 	 *            initial size for the Display
 	 */
-	public TreeDisplay(final Dimension size) {
+	public TreePanel(final Dimension size) {
 		setSize(size);
 		_visualNodes = new ArrayList<VisualTreeNode>();
 		setBackground(Color.WHITE);
@@ -63,6 +65,12 @@ public class TreeDisplay<T> extends JPanel {
 		revalidate();
 	}
 
+	public void fit() {
+		setPreferredSize(new Dimension(HEIGHT * _tree.getDepth() + MARGIN
+				* _tree.getDepth(), WIDTH * _tree.getWidth() + MARGIN
+				* _tree.getWidth()));
+	}
+
 	/**
 	 * Rebuilds the tree to fit to the parents size with the current tree
 	 * (costly)
@@ -83,6 +91,7 @@ public class TreeDisplay<T> extends JPanel {
 		_visualNodes.clear();
 		createSubTree(tree._root, 0, getWidth());
 		_tree = tree;
+		// fit();
 	}
 
 	/**
@@ -123,7 +132,6 @@ public class TreeDisplay<T> extends JPanel {
 			createSubTree(rightChild, middle, right);
 		}
 		final VisualTreeNode node = new VisualTreeNode(root);
-		// TODO popup
 		node.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(final MouseEvent me) {
@@ -131,7 +139,7 @@ public class TreeDisplay<T> extends JPanel {
 				final int level = path._ids.size();
 				final String key = path._ids.toString();
 				final TreePopup<Path> popup = PopupFactory.create(
-						(Window) TreeDisplay.this.getTopLevelAncestor(),
+						(Window) TreePanel.this.getTopLevelAncestor(),
 						Backend._reloptinfos.get(level).get(key));
 				popup.setModalityType(ModalityType.APPLICATION_MODAL);
 				popup.setVisible(true);
@@ -164,6 +172,23 @@ public class TreeDisplay<T> extends JPanel {
 				}
 			}
 		}
+	}
+
+	@Override
+	public void componentHidden(final ComponentEvent arg0) {
+	}
+
+	@Override
+	public void componentMoved(final ComponentEvent arg0) {
+	}
+
+	@Override
+	public void componentResized(final ComponentEvent arg0) {
+		zoom(1);
+	}
+
+	@Override
+	public void componentShown(final ComponentEvent arg0) {
 	}
 
 }

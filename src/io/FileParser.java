@@ -21,7 +21,7 @@ public class FileParser {
 		_buffer = new MessageBuffer(_backend);
 	}
 
-	public void read(final File file) {
+	public void read(final File file, final boolean jumpToEnd) {
 		if (_thread != null) {
 			_stream.stop();
 		}
@@ -30,7 +30,7 @@ public class FileParser {
 			public void run() {
 				try {
 					// TODO change to true
-					_stream.read(file, _buffer, true);
+					_stream.read(file, _buffer, jumpToEnd);
 				} catch (final IOException e) {
 					e.printStackTrace();
 				}

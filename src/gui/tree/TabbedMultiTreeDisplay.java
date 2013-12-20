@@ -17,14 +17,14 @@ import structure.Tree;
  * @param <T>
  *            type of the contained trees
  */
-public class MultiTreeDisplay<T> extends JComponent {
+public class TabbedMultiTreeDisplay<T> extends JComponent {
 	private static final long serialVersionUID = 1L;
 	private final JTabbedPane _tabs;
 
 	/**
 	 * Constructor
 	 */
-	public MultiTreeDisplay() {
+	public TabbedMultiTreeDisplay() {
 		setLayout(new BorderLayout());
 		_tabs = new JTabbedPane();
 		add(_tabs, BorderLayout.CENTER);
@@ -38,7 +38,7 @@ public class MultiTreeDisplay<T> extends JComponent {
 	 *            the tree to add
 	 */
 	public void addTree(final Tree<T> tree, final String title) {
-		final TreeDisplay<T> display = new TreeDisplay<T>(getSize());
+		final TreePanel<T> display = new TreePanel<T>(getSize());
 		display.setTree(tree);
 		_tabs.addTab(title, new JScrollPane(display));
 	}

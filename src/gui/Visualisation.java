@@ -31,6 +31,7 @@ import parser.objects.RelOptInfo;
  */
 public class Visualisation extends JFrame implements IBackendListener {
 	private static final long serialVersionUID = 1L;
+	public static boolean DEBUG = false;
 	private final Overview _overview;
 	private final JScrollPane _scrollpane;
 	private final FileParser _parser;
@@ -65,7 +66,7 @@ public class Visualisation extends JFrame implements IBackendListener {
 	 * @param file
 	 */
 	public void read(final File file) {
-		_parser.read(file);
+		_parser.read(file, !DEBUG);
 	}
 
 	/**
@@ -148,6 +149,7 @@ public class Visualisation extends JFrame implements IBackendListener {
 	}
 
 	public static void main(final String[] args) {
+		DEBUG = true;
 		final Visualisation v = new Visualisation(new Dimension(800, 500));
 		v.setVisible(true);
 		// v._logger.ignoreAll();
